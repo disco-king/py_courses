@@ -19,7 +19,7 @@ def bananas(s) -> set:
     return result
 
 
-#if __name__ == "__main__":
+if __name__ == "__main__":
     print(bananas("bbananana"))
 
     assert bananas("banann") == set()
