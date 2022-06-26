@@ -3,28 +3,31 @@ from itertools import combinations_with_replacement as combs
 
 
 def count_find_num(primesL, limit):
-    ret = []
     if not primesL or limit < 0:
-        return ret
+        return [] 
     step = prod(primesL)
     next_step = True
     places = 1
     factor_limit = limit // step
+    amount = 0
     if factor_limit:
-        ret.append(step)
+        amount += 1
+        max_num = step
     while next_step:
         next_step = False
         comb_gen = combs(primesL, places)
         for i in comb_gen:
             product = prod(i)
             if product <= factor_limit:
-                ret.append(product * step)
+                max_num = max([max_num, product * step])
+                amount += 1
                 next_step = True
         places += 1
-    return [len(ret), max(ret)] if ret else []
+    return [amount, max_num] if amount else []
 
 
 if __name__ == "__main__":
+
     print(count_find_num([], 100))
     print(count_find_num([2, 3, 5], 0))
     print(count_find_num([2, 3, 5], -1))
@@ -49,4 +52,4 @@ if __name__ == "__main__":
     primesL = [2, 3, 47]
     limit = 200
     assert count_find_num(primesL, limit) == []
-    
+
