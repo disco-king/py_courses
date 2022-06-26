@@ -8,9 +8,12 @@ def zeros(n):
         ret += floor(n / 5 ** i)
     return ret
 
-# for num in (0, 6, 30, 1000):
-#     print(num, "! has ", zeros(num), " trailing zeros", sep="")
 
-# assert zeros(0) == 0
-# assert zeros(6) == 1
-# assert zeros(30) == 7
+if __name__ == "__main__":
+    for num in (0, 6, 30, 1000):
+        print(num, "! has ", zeros(num), " trailing zeros", sep="")
+
+    assert zeros(0) == 0
+    assert zeros(6) == 1
+    assert zeros(30) == 7
+
