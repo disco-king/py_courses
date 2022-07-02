@@ -53,14 +53,14 @@ table = fill_table(points)
 Вычисляем длину каждой из пермутаций пути,
 находим минимальную длину и выводим результат.
 """
-combs = permutations(points[1:], len(points) - 1)
+combs = permutations(range(1,len(points)), len(points) - 1)
 res = tuple()
 min_run = float("inf")
 for comb in combs:
-    run = whole_run(points[0], comb, min_run)
+    run = whole_run(table, comb)
     if run < min_run:
         min_run = run
         res = comb
 
-output.print_results(lines, res, points[0])
+# output.print_results(lines, res, points[0])
 print(f"\n Кратчайшее возможное расстояние: {min_run}")

@@ -17,17 +17,17 @@ def fill_table(points):
     return table
 
 
-def whole_run(base, points, minn):
+def whole_run(table, points):
     """
     Функция вычисляет длину всего маршрута
     """
     total = float()
 
     for i in range(len(points)-1):
-        total += distance(points[i], points[i+1])
-        if total > minn:
-            return total
-    total += distance(base, points[0]) + distance(base, points[-1])
+        total += table[i][i+1]
+        # if total > minn:
+        #     return total
+    total += table[0][points[0]] + table[0][points[-1]]
 
     return total
 

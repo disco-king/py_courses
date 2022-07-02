@@ -17,9 +17,9 @@ def get_coords(string):
     elif "-" in string:
         delim = "-"
 
-    halves = string.split(delim) #should limit amount of splits
+    halves = string.split(delim, 1)
 
-    if len(halves) > 2:
+    if len(halves) > 2:#???
         halves[1] = "".join(halves[1:])
 
     halves[0] = halves[0].strip()
