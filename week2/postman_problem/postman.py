@@ -1,9 +1,8 @@
 import sys
 from itertools import permutations
-# import utils
-# import utils.computations as computations
 from utils.computations import whole_run
 from utils.computations import distance
+from utils.computations import fill_table
 import utils.parsing as parsing
 import utils.output as output
 
@@ -47,6 +46,8 @@ elif line_num == 1:
     output.print_format(lines[points[0]], points[0], 0.0, "")
     print(f"\n Кратчайшее возможное расстояние: {0.0}")
     exit()
+
+table = fill_table(points)
 
 """
 Вычисляем длину каждой из пермутаций пути,

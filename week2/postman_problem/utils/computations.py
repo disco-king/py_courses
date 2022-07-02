@@ -7,6 +7,16 @@ def distance(point_1, point_2) -> float:
             + (point_2[1] - point_1[1]) ** 2) ** 0.5
 
 
+def fill_table(points):
+    table = {}
+    for main in range(len(points)):
+        table[main] = {}
+        for sub in range(len(points)):
+            val = distance(points[main], points[sub])
+            table[main][sub] = val
+    return table
+
+
 def whole_run(base, points, minn):
     """
     Функция вычисляет длину всего маршрута
