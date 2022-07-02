@@ -12,8 +12,7 @@ def fill_table(points):
     for main in range(len(points)):
         table[main] = {}
         for sub in range(len(points)):
-            val = distance(points[main], points[sub])
-            table[main][sub] = val
+            table[main][sub] = distance(points[main][1], points[sub][1])
     return table
 
 
@@ -25,8 +24,6 @@ def whole_run(table, points):
 
     for i in range(len(points)-1):
         total += table[i][i+1]
-        # if total > minn:
-        #     return total
     total += table[0][points[0]] + table[0][points[-1]]
 
     return total

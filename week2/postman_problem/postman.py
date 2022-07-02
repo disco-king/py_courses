@@ -25,7 +25,7 @@ points = []
 
 for i in range(line_num):
     ret = parsing.get_coords(input())
-    lines[ret[1]] = ret[0]
+    lines[i] = ret
     points.append(ret[1])
 
 """
@@ -47,7 +47,7 @@ elif line_num == 1:
     print(f"\n Кратчайшее возможное расстояние: {0.0}")
     exit()
 
-table = fill_table(points)
+table = fill_table(lines)
 
 """
 Вычисляем длину каждой из пермутаций пути,
