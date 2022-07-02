@@ -53,10 +53,10 @@ elif line_num == 1:
 находим минимальную длину и выводим результат.
 """
 combs = permutations(points[1:], len(points) - 1)
-res = next(combs)
-min_run = whole_run(points[0], res)
+res = tuple()
+min_run = float("inf")
 for comb in combs:
-    run = whole_run(points[0], comb)
+    run = whole_run(points[0], comb, min_run)
     if run < min_run:
         min_run = run
         res = comb
