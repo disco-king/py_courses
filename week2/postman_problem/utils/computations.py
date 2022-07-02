@@ -9,7 +9,7 @@ def distance(point_1, point_2) -> float:
 
 def whole_run(base, points):
     """
-    Функция вычисляет расстояние всего маршрута
+    Функция вычисляет длину всего маршрута
     """
     total = float()
 
