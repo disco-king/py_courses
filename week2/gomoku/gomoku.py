@@ -1,4 +1,5 @@
 from logic import check_win
+from logic import check_point
 import os
 
 alpha = 'ABCDEFGHIJ'
@@ -35,6 +36,14 @@ turn = False
 while(True):
     move = input()
 
+    if "check" in move:
+        move = move[5:].replace(" ", "")
+        num = move[0] if move[0].isdigit() else move[1]
+        let = move[0] if move[0].isalpha() else move[1]
+        ret = check_point(lst, int(num), get_index(let))
+        print(f"got worst score of {ret}")
+        continue
+
     move.replace(" ", "")
     if len(move) != 2 or move.isalpha() or move.isdigit():
         continue
@@ -45,9 +54,9 @@ while(True):
     lst[int(num)][get_index(let)] = figs[turn]
     print_field(lst)
     
-    res = check_win(lst)
-    if res:
-        print(res, ' wins!')
-        break
+    # res = check_win(lst)
+    # if res:
+    #     print(res, ' wins!')
+    #     break
     
     turn = not turn
