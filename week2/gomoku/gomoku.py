@@ -24,43 +24,26 @@ def print_field(lst):
             print(lst[i][j] if lst[i][j] != '0' else '-', end='   ')
         print('\n')
 
-
 size = 10
 win_num = 5
 
-lst = [['0' for p in range(size)] for i in range(size)]
+def field_init():
+    lst = [['0' for p in range(size)] for i in range(size)]
+    return(lst)
 
-print_field(lst)
 figs = "XY"
-turn = False
 
-while(True):
+def make_move(field, turn, i=-1, j=-1):
+    if turn and field[i][j] != '0':
+        return None
+    ret = [i, j]
     if turn:
-        move = input()
-
-        if "check" in move:
-            move = move[5:].replace(" ", "")
-            num = move[0] if move[0].isdigit() else move[1]
-            let = move[0] if move[0].isalpha() else move[1]
-            ret = check_point(lst, int(num), get_index(let))
-            print(f"got worst score of {ret}")
-            continue
-
-        move.replace(" ", "")
-        if len(move) != 2 or move.isalpha() or move.isdigit():
-            continue
-
-        num = move[0] if move[0].isdigit() else move[1]
-        let = move[0] if move[0].isalpha() else move[1]
-        
-        lst[int(num)][get_index(let)] = figs[turn]
+        field[i][j] = figs[int(turn)]
     else:
-        ai_move(lst, figs[turn])
+        ret = ai_move(field, figs[int(turn)])
     
-    print_field(lst)
-    res = check_win(lst)
+    res = check_win(field)
     if res:
-        print(res, ' wins!')
-        break
-    
-    turn = not turn
+        # ret[2] = True
+        print(field[res[0]][res[1]], ' loses!')
+    return ret

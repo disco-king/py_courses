@@ -31,8 +31,8 @@ def check_win(lst):
                 continue
             for dir in dirs:
                 res = check_seq(lst, i, j, dir)
-                if res[0] == win_num:
-                    return lst[i][j]
+                if res[0] >= win_num:
+                    return (i, j, res[0], dir)
     return None
 
 def reverse(dir):
@@ -42,7 +42,6 @@ def check_point(lst, i, j):
     value = 4
     if lst[i][j] == '0':
         return None
-    # lst[i][j] = fig
     for dir in dirs:
         res_dir = check_seq(lst, i, j, dir)
         res_rev = check_seq(lst, i, j, reverse(dir))
@@ -51,5 +50,4 @@ def check_point(lst, i, j):
         if res_dir[0] + res_dir[1] >= win_num:
             res_dir[0] = 5 - res_dir[0]
             value = min(value, res_dir[0])
-    # lst[i][j] = '0'
     return value
