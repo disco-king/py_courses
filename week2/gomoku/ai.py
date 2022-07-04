@@ -35,6 +35,5 @@ def ai_move(field, fig):
                     moves.append((i,j))
             dic[(i,j)] = buff.copy()
     crds = moves[rand(0, len(moves)-1)]
-    # print()
     field[crds[0]][crds[1]] = fig
     return crds

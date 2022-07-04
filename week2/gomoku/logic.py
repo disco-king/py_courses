@@ -29,22 +29,22 @@ def check_win(lst):
         for j in range(size):
             if lst[i][j] == '0':
                 continue
-            for dir in dirs:
-                res = check_seq(lst, i, j, dir)
+            for direct in dirs:
+                res = check_seq(lst, i, j, direct)
                 if res[0] >= win_num:
-                    return (i, j, res[0], dir)
+                    return (i, j, res[0], direct)
     return None
 
-def reverse(dir):
-    return (dir[0] * -1, dir[1] * -1)
+def reverse(direct):
+    return (direct[0] * -1, direct[1] * -1)
 
 def check_point(lst, i, j):
     value = 4
     if lst[i][j] == '0':
         return None
-    for dir in dirs:
-        res_dir = check_seq(lst, i, j, dir)
-        res_rev = check_seq(lst, i, j, reverse(dir))
+    for direct in dirs:
+        res_dir = check_seq(lst, i, j, direct)
+        res_rev = check_seq(lst, i, j, reverse(direct))
         res_dir[0] += res_rev[0] - 1
         res_dir[1] += res_rev[1]
         if res_dir[0] + res_dir[1] >= win_num:

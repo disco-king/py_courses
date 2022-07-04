@@ -1,5 +1,6 @@
 from tkinter import *
 import gomoku
+import time
 
 win_side = 600
 rect_side = win_side // 10
@@ -34,17 +35,56 @@ def draw_move(cds, move):
                         bot_x, bot_y,
                         width=3)
 
+def finish_game(data, figure):
+    x = data[0]
+    y = data[1]
+    direct = data[3]
+    if figure:
+        move = human_first
+    else:
+        move = not human_first
+    for i in range(data[2]):
+        c.create_rectangle(x * rect_side,
+                            y * rect_side,
+                            (x + 1) * rect_side,
+                            (y + 1) * rect_side,
+                            fill="red")
+        draw_move((x, y), move)
+        x += direct[0]
+        y += direct[1]
+    # time.sleep(10)
+    # c.destroy()
+
+
+def move_check(field, move, ret):
+    ret = gomoku.make_move(field, move, ret[0], ret[1])
+    if not ret:
+        return
+    draw_move(ret, human_first)
+    if ret[2]:
+        finish_game(ret[3], move)
+
+
 def place_x(event, field):
     ret = get_rect(event.x, event.y)
+
+    # move_check(field, True, ret)
+    # move_check(field, False, ret)
 
     move = True
     ret = gomoku.make_move(field, move, ret[0], ret[1])
     if not ret:
         return
     draw_move(ret, human_first)
-    move = not move
+    if ret[2]:
+        finish_game(ret[3], move)
+    move = False
     ret = gomoku.make_move(field, move)
+    if not ret:
+        return
     draw_move(ret, not human_first)
+    if ret[2]:
+        finish_game(ret[3], move)
     print(ret)
 
 root = Tk()
@@ -60,6 +100,7 @@ for i in range(1,10):
 field = gomoku.field_init()
 
 human_first = BooleanVar()
+game_over = BooleanVar()
 human_first = True
 
 if not human_first:
