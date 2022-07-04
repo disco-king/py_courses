@@ -7,7 +7,7 @@ def check_nul(lst, i, j, direction, fig):
     y = i + direction[0]
     x = j + direction[1]
     if (x >= 0 and x < size and y >= 0 and y < size
-            and lst[x][y] in ('0', fig)):
+            and lst[y][x] in ('0', fig)):
         return check_nul(lst, y, x, direction, fig) + 1
     return 1
 
@@ -42,12 +42,14 @@ def check_point(lst, i, j):
     value = 4
     if lst[i][j] == '0':
         return None
+    # lst[i][j] = fig
     for dir in dirs:
-        res_ai = check_seq(lst, i, j, dir)
+        res_dir = check_seq(lst, i, j, dir)
         res_rev = check_seq(lst, i, j, reverse(dir))
-        res_ai[0] += res_rev[0] - 1
-        res_ai[1] += res_rev[1]
-        if res_ai[0] + res_ai[1] >= win_num:
-            res_ai[0] = 5 - res_ai[0]
-            value = min(value, res_ai[0])
+        res_dir[0] += res_rev[0] - 1
+        res_dir[1] += res_rev[1]
+        if res_dir[0] + res_dir[1] >= win_num:
+            res_dir[0] = 5 - res_dir[0]
+            value = min(value, res_dir[0])
+    # lst[i][j] = '0'
     return value

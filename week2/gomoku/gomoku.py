@@ -15,14 +15,14 @@ def print_field(lst):
     print('\t', end = '')
 
     for letter in alpha:
-        print(letter, end=' ')
+        print(letter, end='   ')
     print('\n')
 
     for i in range(len(lst)):
         print(i, end = '\t')
         for j in range(len(lst[i])):
-            print(lst[i][j], end=' ')
-        print()
+            print(lst[i][j] if lst[i][j] != '0' else '-', end='   ')
+        print('\n')
 
 
 size = 10
