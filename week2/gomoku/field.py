@@ -60,7 +60,7 @@ for i in range(1,10):
 field = gomoku.field_init()
 
 human_first = BooleanVar()
-human_first = False
+human_first = True
 
 if not human_first:
     ret = gomoku.make_move(field, False)
