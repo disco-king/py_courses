@@ -45,11 +45,10 @@ def make_move(field, turn, i=-1, j=-1):
 
     ret.append(False)
     res = check_win(field)
-    if res:
     # if not turn:
-    #     ret = [6, 5, True]
-    #     ret.append((ret[0], ret[1], 3, (0, 1)))
+    #     ret = [i, j, True]
+    #     ret.append((i, j, 3, (-1, 0)))
+    if res:
         ret[2] = True
         ret.append(res)
-        # print(field[res[0]][res[1]], ' loses!')
     return ret

@@ -10,12 +10,8 @@ def get_rect(x, y):
     y = y // rect_side
     return [x, y]
 
-def create_rect(cds):
-    c.create_rectangle(cds[0] * rect_side + 10,
-                    cds[1] * rect_side + 10,
-                    (cds[0] + 1) * rect_side - 10,
-                    (cds[1] + 1) * rect_side - 10,
-                    width=3, activefill="gray")
+def exit_win():
+    root.destroy()
 
 def draw_move(cds, move):
     top_x = cds[0] * rect_side + 10
@@ -52,39 +48,28 @@ def finish_game(data, figure):
         draw_move((x, y), move)
         x += direct[0]
         y += direct[1]
-    # time.sleep(10)
-    # c.destroy()
 
 
 def move_check(field, move, ret):
     ret = gomoku.make_move(field, move, ret[0], ret[1])
     if not ret:
-        return
-    draw_move(ret, human_first)
+        return 0
+    draw_move(ret, human_first if move else not human_first)
     if ret[2]:
         finish_game(ret[3], move)
+        return 1
+    return 2
 
 
-def place_x(event, field):
+def next_move(event, field):
     ret = get_rect(event.x, event.y)
 
-    # move_check(field, True, ret)
-    # move_check(field, False, ret)
+    result = move_check(field, True, ret)
+    if result == 0:
+        return
+    if result == 1 or move_check(field, False, ret) == 1:
+        exit_win()
 
-    move = True
-    ret = gomoku.make_move(field, move, ret[0], ret[1])
-    if not ret:
-        return
-    draw_move(ret, human_first)
-    if ret[2]:
-        finish_game(ret[3], move)
-    move = False
-    ret = gomoku.make_move(field, move)
-    if not ret:
-        return
-    draw_move(ret, not human_first)
-    if ret[2]:
-        finish_game(ret[3], move)
     print(ret)
 
 root = Tk()
@@ -108,6 +93,6 @@ if not human_first:
     draw_move(ret, not human_first)
 
 root.bind("<Button-1>", lambda e, 
-            f=field: place_x(e, f))
+            f=field: next_move(e, f))
 
 root.mainloop()
