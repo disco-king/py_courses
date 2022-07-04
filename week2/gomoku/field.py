@@ -68,31 +68,46 @@ def next_move(event, field):
     if result == 0:
         return
     if result == 1 or move_check(field, False, ret) == 1:
-        exit_win()
+        # exit_win()
+        return
 
-    print(ret)
+def init_window():
+    for i in range(1,10):
+        step = i*rect_side
+        c.create_line(step, 0, step, win_side)
+        c.create_line(0, step, win_side, step)
+
+    field = gomoku.field_init()
+
+    root.bind("<Button-1>", lambda e, 
+                f=field: next_move(e, f))
+    return field
 
 root = Tk()
 
 c = Canvas(root, width=win_side, height=win_side, bg='white')
 c.pack()
 
-for i in range(1,10):
-    step = i*rect_side
-    c.create_line(step, 0, step, win_side)
-    c.create_line(0, step, win_side, step)
 
-field = gomoku.field_init()
+# for i in range(1,10):
+#     step = i*rect_side
+#     c.create_line(step, 0, step, win_side)
+#     c.create_line(0, step, win_side, step)
+
+# field = gomoku.field_init()
+
+# root.bind("<Button-1>", lambda e, 
+#             f=field: next_move(e, f))
+
+field = init_window()
 
 human_first = BooleanVar()
 game_over = BooleanVar()
-human_first = True
+human_first = False
 
 if not human_first:
     ret = gomoku.make_move(field, False)
     draw_move(ret, not human_first)
 
-root.bind("<Button-1>", lambda e, 
-            f=field: next_move(e, f))
 
 root.mainloop()
