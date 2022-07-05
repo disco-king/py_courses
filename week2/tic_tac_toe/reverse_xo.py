@@ -1,17 +1,19 @@
 from tkinter import *
-import gomoku
-import time
+import utils.driver as driver
 
 win_side = 600
 rect_side = win_side // 10
+
 
 def get_rect(x, y):
     x = x // rect_side
     y = y // rect_side
     return [x, y]
 
+
 def exit_win():
     root.destroy()
+
 
 def draw_move(cds, move):
     top_x = cds[0] * rect_side + 10
@@ -30,6 +32,7 @@ def draw_move(cds, move):
         c.create_oval(top_x, top_y,
                         bot_x, bot_y,
                         width=3)
+
 
 def finish_game(data, figure):
     x = data[0]
@@ -51,18 +54,21 @@ def finish_game(data, figure):
 
 
 def check_move(field, move, ret):
-    ret = gomoku.make_move(field, move, ret[0], ret[1])
+    ret = driver.make_move(field, move, ret[0], ret[1])
     if not ret:
         return 1
+
     draw_move(ret, human_first if move else not human_first)
+
     if ret[2]:
         if ret[3]:
             finish_game(ret[3], move)
             text = "Computer" if move else "Human"
-            game_over_prompt(text + " won!\nPlay again?")
+            root.after(500, lambda t=text+" won!\nPlay again?": game_over_prompt(t))
         else:
             game_over_prompt("It's a tie!\nPlay again?")
         return 1
+
     return 0
 
 
@@ -81,7 +87,7 @@ def init_window():
         c.create_line(0, step, win_side, step)
 
     global field
-    field = gomoku.field_init()
+    field = driver.field_init()
     global human_first
     human_first = True
 
@@ -93,7 +99,7 @@ def init_window():
                 f=field: next_move(e, f))
 
     if not human_first:
-        ret = gomoku.make_move(field, False)
+        ret = driver.make_move(field, False)
         draw_move(ret, not human_first)
 
 

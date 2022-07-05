@@ -1,10 +1,6 @@
 from random import randint as rand
-import logic
-from logic import check_point
-
-
-def borders(field, i, j):
-    pass #check if field[i][j] has any neighbors
+from .logic import check_point
+from .logic import size
 
 
 def ai_move(field, fig):
@@ -12,8 +8,8 @@ def ai_move(field, fig):
     best = [0,0]
     buff = [0,0]
     dic = {}
-    for i in range(logic.size):
-        for j in range(logic.size):
+    for i in range(size):
+        for j in range(size):
             if field[i][j] != '0':
                 continue
             field[i][j] = fig

@@ -1,3 +1,4 @@
+
 dirs = ((0,1), (1,1), (1,0), (1,-1))
 size = 10
 win_num = 5
@@ -10,6 +11,7 @@ def check_nul(lst, i, j, direction, fig):
             and lst[y][x] in ('0', fig)):
         return check_nul(lst, y, x, direction, fig) + 1
     return 1
+
 
 def check_seq(lst, i, j, direction):
     y = i + direction[0]
