@@ -96,34 +96,26 @@ def init_window():
         draw_move(ret, not human_first)
 
 
-# def get_prompt(ptext, b1_text, b2_text, blst):
-#     prompt = Toplevel(root)
-#     prompt.geometry("200x100+310+350")
-#     prompt.resizable(False, False)
-#     prompt.overrideredirect(True)
-#     prompt.attributes("-topmost", True)
-
-#     Label(prompt, text=ptext, font="Arial 12").pack(side=TOP, pady=10)
-#     blst[0] = Button(prompt, text=b1_text, width=9)
-#     blst[1] = Button(prompt, text=b2_text, width=9)
-#     blst[0].pack(side=LEFT, padx=15)
-#     blst[1].pack(side=RIGHT, padx=15)
-
-#     return prompt
-
-
-def game_over_prompt(prompt_text):
+def get_prompt(ptext, b1_text, b2_text, blst):
     prompt = Toplevel(root)
     prompt.geometry("200x100+310+350")
     prompt.resizable(False, False)
     prompt.overrideredirect(True)
     prompt.attributes("-topmost", True)
 
-    Label(prompt, text=prompt_text, font="Arial 12").pack(side=TOP, pady=10)
-    b1 = Button(prompt, text="Yes", width=9)
-    b2 = Button(prompt, text="No", width=9)
-    b1.pack(side=LEFT, padx=15)
-    b2.pack(side=RIGHT, padx=15)
+    Label(prompt, text=ptext, font="Arial 12").pack(side=TOP, pady=10)
+    blst[0] = Button(prompt, text=b1_text, width=9)
+    blst[1] = Button(prompt, text=b2_text, width=9)
+    blst[0].pack(side=LEFT, padx=15)
+    blst[1].pack(side=RIGHT, padx=15)
+
+    return prompt
+
+
+def game_over_prompt(prompt_text):
+    blst = [0, 0]
+
+    prompt = get_prompt(prompt_text, "Yes", "No", blst)
 
     def decide(event, yes):
         if yes:
@@ -136,27 +128,17 @@ def game_over_prompt(prompt_text):
             prompt.destroy()
             root.destroy()
 
-    b1.bind("<Button-1>", lambda e, 
+    blst[0].bind("<Button-1>", lambda e, 
                 val=True: decide(e, val))
-    b2.bind("<Button-1>", lambda e, 
+    blst[1].bind("<Button-1>", lambda e, 
                 val=False: decide(e, val))
     prompt.mainloop()
 
 
 def first_prompt():
-    prompt = Toplevel(root)
-    prompt.geometry("200x100+310+350")
-    prompt.resizable(False, False)
-    prompt.overrideredirect(True)
-    prompt.attributes("-topmost", True)
+    blst = [0, 0]
 
-    Label(prompt, text="Who plays first?", font="Arial 12").pack(side=TOP, pady=10)
-    b1 = Button(prompt, text="Human", width=9)
-    b2 = Button(prompt, text="Computer", width=9)
-    b1.pack(side=LEFT, padx=15)
-    b2.pack(side=RIGHT, padx=15)
-
-    # prompt = get_prompt("Who plays first?", "Human", "Computer")
+    prompt = get_prompt("Who plays first?", "Human", "Computer", blst)
 
     def set_first(event, val):
         global human_first
@@ -164,9 +146,9 @@ def first_prompt():
         prompt.quit()
         prompt.destroy()
 
-    b1.bind("<Button-1>", lambda e, 
+    blst[0].bind("<Button-1>", lambda e, 
                 val=True: set_first(e, val))
-    b2.bind("<Button-1>", lambda e, 
+    blst[1].bind("<Button-1>", lambda e, 
                 val=False: set_first(e, val))
     prompt.mainloop()
 
