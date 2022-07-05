@@ -5,6 +5,12 @@ win_num = 5
 
 
 def check_nul(lst, i, j, direction, fig):
+    """
+    Проверка количества "свободных мест"
+    по линии, проверяемой в check_seq.
+    Используется программой для оценки
+    "стоимости" хода.
+    """
     y = i + direction[0]
     x = j + direction[1]
     if (x >= 0 and x < size and y >= 0 and y < size
@@ -14,6 +20,11 @@ def check_nul(lst, i, j, direction, fig):
 
 
 def check_seq(lst, i, j, direction):
+    """
+    Рекурсивное движение по прямой линии
+    на поле. Используется для определения
+    количества фигур, стоящих подряд.
+    """
     y = i + direction[0]
     x = j + direction[1]
     result = [1, 0]
@@ -26,7 +37,12 @@ def check_seq(lst, i, j, direction):
             result[1] += check_nul(lst, y, x, direction, lst[i][j])
     return result
 
+
 def check_win(lst):
+    """
+    Проверка "окружения" каждого занятого поля
+    по одному из 4 направлений.
+    """
     for i in range(size):
         for j in range(size):
             if lst[i][j] == '0':
@@ -37,10 +53,21 @@ def check_win(lst):
                     return (i, j, res[0], direct)
     return None
 
+
 def reverse(direct):
+    """
+	Разворот направления движения
+    для проверки поля.
+    """
     return (direct[0] * -1, direct[1] * -1)
 
+
 def check_point(lst, i, j):
+    """
+    Проверка "стоимости" хода -
+    необходима для поиска
+    наилучшего хода компьютером.
+    """
     value = 4
     if lst[i][j] == '0':
         return None
@@ -54,7 +81,12 @@ def check_point(lst, i, j):
             value = min(value, res_dir[0])
     return value
 
+
 def check_tie(field):
+    """
+    Проверка заполнения "доски"
+    (состояние ничьей).
+    """
     empty = True
     for i in range(size):
         if '0' in field[i]:

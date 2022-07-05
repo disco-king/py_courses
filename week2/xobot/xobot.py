@@ -16,6 +16,10 @@ def exit_win():
 
 
 def draw_move(cds, move):
+    """
+    Изображение на холсте Х или О
+    в зависимости от очередности.
+    """
     top_x = cds[0] * rect_side + 10
     top_y = cds[1] * rect_side + 10
     bot_x = (cds[0] + 1) * rect_side - 10
@@ -35,6 +39,11 @@ def draw_move(cds, move):
 
 
 def finish_game(data, figure):
+    """
+    Изменение цвета "проигрышного" ряда на красный.
+    Условия перед циклом выясняют, какие фигуры
+    должны быть изображены в ряду.
+    """
     x = data[0]
     y = data[1]
     direct = data[3]
@@ -54,6 +63,15 @@ def finish_game(data, figure):
 
 
 def check_move(field, move, ret):
+    """
+    Проверка корректности ввода
+    (на случай, если поле уже занято).
+    Если ход корректен, он изображается
+    на холсте. Затем проверяется победа
+    и ситуация ничьей. В любой из этих
+    ситуаций игра заканчивается
+    с предложением сыграть еще.
+    """
     ret = driver.make_move(field, move, ret[0], ret[1])
     if not ret:
         return 1
@@ -64,7 +82,10 @@ def check_move(field, move, ret):
         if ret[3]:
             finish_game(ret[3], move)
             text = "Computer" if move else "Human"
-            root.after(500, lambda t=text+" won!\nPlay again?": game_over_prompt(t))
+            # отсрочка нужна, чтобы пользователь успел оглядеть
+            # ряд, вприведший к поражению одной из сторон
+            root.after(500, lambda t=text+" won!\nPlay again?":
+                                    game_over_prompt(t))
         else:
             game_over_prompt("It's a tie!\nPlay again?")
         return 1
@@ -73,6 +94,12 @@ def check_move(field, move, ret):
 
 
 def next_move(event, field):
+    """
+    Установление нужного квадрата
+    по положению мыши, совершение хода.
+    условие для первого вызова check_move проверяет
+    корректность пользовательского ввода.
+    """
     ret = get_rect(event.x, event.y)
 
     if check_move(field, True, ret):
@@ -81,6 +108,11 @@ def next_move(event, field):
 
 
 def init_window():
+    """
+    Cоздание базового рисунка на холсте,
+	инициализация списка с состоянием доски,
+	получение от пользователя очередности ходов.
+    """
     for i in range(1,10):
         step = i*rect_side
         c.create_line(step, 0, step, win_side)
@@ -104,8 +136,12 @@ def init_window():
 
 
 def get_prompt(ptext, b1_text, b2_text, blst):
+    """
+    Создание и возврат объекта "обобщенного"
+    диалогового окна с ярлыком и двумя кнопками.
+    """
     prompt = Toplevel(root)
-    prompt.geometry("200x100+310+350")
+    prompt.geometry("250x110+275+350")
     prompt.resizable(False, False)
     prompt.overrideredirect(True)
     prompt.attributes("-topmost", True)
@@ -120,6 +156,9 @@ def get_prompt(ptext, b1_text, b2_text, blst):
 
 
 def game_over_prompt(prompt_text):
+    """
+    Диалоговое окно на случай окончания игры.
+    """
     blst = [0, 0]
 
     prompt = get_prompt(prompt_text, "Yes", "No", blst)
@@ -143,6 +182,9 @@ def game_over_prompt(prompt_text):
 
 
 def first_prompt():
+    """
+    Диалоговое окно "выясняет" очередность ходов.
+    """
     blst = [0, 0]
 
     prompt = get_prompt("Who plays first?", "Human", "Computer", blst)
@@ -159,7 +201,9 @@ def first_prompt():
                 val=False: set_first(e, val))
     prompt.mainloop()
 
-
+"""
+Создание окна и инициализация основных переменных в программе.
+"""
 root = Tk()
 root.title("XOBot")
 root.resizable(False, False)
@@ -173,6 +217,5 @@ human_first = bool()
 game_over = BooleanVar()
 
 init_window()
-
 
 root.mainloop()
