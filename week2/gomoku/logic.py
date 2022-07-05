@@ -51,3 +51,10 @@ def check_point(lst, i, j):
             res_dir[0] = 5 - res_dir[0]
             value = min(value, res_dir[0])
     return value
+
+def check_tie(field):
+    empty = True
+    for i in range(size):
+        if '0' in field[i]:
+            empty = False
+    return empty

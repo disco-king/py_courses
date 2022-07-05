@@ -50,27 +50,28 @@ def finish_game(data, figure):
         y += direct[1]
 
 
-def move_check(field, move, ret):
+def check_move(field, move, ret):
     ret = gomoku.make_move(field, move, ret[0], ret[1])
     if not ret:
-        return 0
+        return 1
     draw_move(ret, human_first if move else not human_first)
     if ret[2]:
-        finish_game(ret[3], move)
+        if ret[3]:
+            finish_game(ret[3], move)
+            text = "Computer" if move else "Human"
+            game_over_prompt(text + " won!\nPlay again?")
+        else:
+            game_over_prompt("It's a tie!\nPlay again?")
         return 1
-    return 2
+    return 0
 
 
 def next_move(event, field):
     ret = get_rect(event.x, event.y)
 
-    result = move_check(field, True, ret)
-    if result == 0:
+    if check_move(field, True, ret):
         return
-    if result == 1:
-        game_over_prompt("Computer won!\nPlay again?")
-    elif move_check(field, False, ret) == 1:
-        game_over_prompt("Human won!\nPlay again?")
+    check_move(field, False, ret)
 
 
 def init_window():
