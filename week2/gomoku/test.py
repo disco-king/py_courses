@@ -1,10 +1,16 @@
-import time
-import os
+from tkinter import *
 
-str = input()
-length = len(str)
-for i in range(6):
-	print (str)
-	time.sleep(1)
-	os.system('cls')
-	time.sleep(1)
+
+root = Tk()
+
+var = BooleanVar()
+
+print(var.get())
+
+var.set(True)
+
+print(var.get())
+
+var.set(False)
+
+print(var.get())

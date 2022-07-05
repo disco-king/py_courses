@@ -77,33 +77,23 @@ def init_window():
         c.create_line(step, 0, step, win_side)
         c.create_line(0, step, win_side, step)
 
+    global field
     field = gomoku.field_init()
+    global human_first
+    human_first = True
 
     root.bind("<Button-1>", lambda e, 
                 f=field: next_move(e, f))
-    return field
+    # return field
 
 root = Tk()
 
 c = Canvas(root, width=win_side, height=win_side, bg='white')
 c.pack()
 
-
-# for i in range(1,10):
-#     step = i*rect_side
-#     c.create_line(step, 0, step, win_side)
-#     c.create_line(0, step, win_side, step)
-
-# field = gomoku.field_init()
-
-# root.bind("<Button-1>", lambda e, 
-#             f=field: next_move(e, f))
-
-field = init_window()
-
-human_first = BooleanVar()
 game_over = BooleanVar()
-human_first = False
+
+init_window()
 
 if not human_first:
     ret = gomoku.make_move(field, False)
