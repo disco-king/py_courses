@@ -67,9 +67,11 @@ def next_move(event, field):
     result = move_check(field, True, ret)
     if result == 0:
         return
-    if result == 1 or move_check(field, False, ret) == 1:
-        # exit_win()
-        return
+    if result == 1:
+        game_over_prompt("Computer won!\nPlay again?")
+    elif move_check(field, False, ret) == 1:
+        game_over_prompt("Human won!\nPlay again?")
+
 
 def init_window():
     for i in range(1,10):
@@ -82,22 +84,106 @@ def init_window():
     global human_first
     human_first = True
 
+    root.attributes("-topmost", False)
+    first_prompt()
+    root.attributes("-topmost", True)
+
     root.bind("<Button-1>", lambda e, 
                 f=field: next_move(e, f))
-    # return field
+
+    if not human_first:
+        ret = gomoku.make_move(field, False)
+        draw_move(ret, not human_first)
+
+
+# def get_prompt(ptext, b1_text, b2_text, blst):
+#     prompt = Toplevel(root)
+#     prompt.geometry("200x100+310+350")
+#     prompt.resizable(False, False)
+#     prompt.overrideredirect(True)
+#     prompt.attributes("-topmost", True)
+
+#     Label(prompt, text=ptext, font="Arial 12").pack(side=TOP, pady=10)
+#     blst[0] = Button(prompt, text=b1_text, width=9)
+#     blst[1] = Button(prompt, text=b2_text, width=9)
+#     blst[0].pack(side=LEFT, padx=15)
+#     blst[1].pack(side=RIGHT, padx=15)
+
+#     return prompt
+
+
+def game_over_prompt(prompt_text):
+    prompt = Toplevel(root)
+    prompt.geometry("200x100+310+350")
+    prompt.resizable(False, False)
+    prompt.overrideredirect(True)
+    prompt.attributes("-topmost", True)
+
+    Label(prompt, text=prompt_text, font="Arial 12").pack(side=TOP, pady=10)
+    b1 = Button(prompt, text="Yes", width=9)
+    b2 = Button(prompt, text="No", width=9)
+    b1.pack(side=LEFT, padx=15)
+    b2.pack(side=RIGHT, padx=15)
+
+    def decide(event, yes):
+        if yes:
+            c.delete("all")
+            init_window()
+            prompt.quit()
+            prompt.destroy()
+        else:
+            prompt.quit()
+            prompt.destroy()
+            root.destroy()
+
+    b1.bind("<Button-1>", lambda e, 
+                val=True: decide(e, val))
+    b2.bind("<Button-1>", lambda e, 
+                val=False: decide(e, val))
+    prompt.mainloop()
+
+
+def first_prompt():
+    prompt = Toplevel(root)
+    prompt.geometry("200x100+310+350")
+    prompt.resizable(False, False)
+    prompt.overrideredirect(True)
+    prompt.attributes("-topmost", True)
+
+    Label(prompt, text="Who plays first?", font="Arial 12").pack(side=TOP, pady=10)
+    b1 = Button(prompt, text="Human", width=9)
+    b2 = Button(prompt, text="Computer", width=9)
+    b1.pack(side=LEFT, padx=15)
+    b2.pack(side=RIGHT, padx=15)
+
+    # prompt = get_prompt("Who plays first?", "Human", "Computer")
+
+    def set_first(event, val):
+        global human_first
+        human_first = val
+        prompt.quit()
+        prompt.destroy()
+
+    b1.bind("<Button-1>", lambda e, 
+                val=True: set_first(e, val))
+    b2.bind("<Button-1>", lambda e, 
+                val=False: set_first(e, val))
+    prompt.mainloop()
+
 
 root = Tk()
+root.title("XOBot")
+root.resizable(False, False)
+root.geometry("+100+100")
 
 c = Canvas(root, width=win_side, height=win_side, bg='white')
 c.pack()
 
+field = list()
+human_first = bool()
 game_over = BooleanVar()
 
 init_window()
-
-if not human_first:
-    ret = gomoku.make_move(field, False)
-    draw_move(ret, not human_first)
 
 
 root.mainloop()
