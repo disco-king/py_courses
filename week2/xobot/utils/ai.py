@@ -16,7 +16,7 @@ def ai_move(field, fig):
     выбор происводится случайным образом. 
     """
     moves = []
-    best = [0,0]
+    best = [-1,-1]
     buff = [0,0]
     dic = {}
     for i in range(size):
@@ -41,6 +41,7 @@ def ai_move(field, fig):
                 elif buff[1] == best[1]:
                     moves.append((i,j))
             dic[(i,j)] = buff.copy()
+
     crds = moves[rand(0, len(moves)-1)]
     field[crds[0]][crds[1]] = fig
     return crds
