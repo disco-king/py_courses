@@ -26,20 +26,27 @@ def multiplier(number: int):
     return number * 2
 
 @cache_decorator
-def string_multiplier(string: str):
-    return string + string
+def adder(item):
+    return item + item
+
 
 if __name__ == "__main__":
+
     print(multiplier(1))
     print(multiplier(1))
     print(multiplier(2))
     print(multiplier(3))
     print(multiplier(2))
 
-    print(string_multiplier("foo"))
-    print(string_multiplier("bar"))
-    print(string_multiplier("foo"))
-    print(string_multiplier("bar"))
+    print(adder("foo"))
+    print(adder("bar"))
+    print(adder("foo"))
+    print(adder("bar"))
+
+    print(adder([1, 2, 3]))
+    print(adder([4, 5, 6]))
+    print(adder([1, 2, 3]))
+    print(adder([4, 5, 6]))
 
 # def state_save():
 #     calls: int = 0
