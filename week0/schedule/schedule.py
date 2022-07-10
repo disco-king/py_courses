@@ -9,12 +9,16 @@ class Movie:
     dates: List[Tuple[datetime, datetime]]
 
     def schedule(self) -> Generator[datetime, None, None]:
-        day_increment = timedelta(days=1)
-        for date in self.dates:
+
+        def date_gen(date):
             ptr = date[0]
             while ptr <= date[1]:
                 yield ptr
-                ptr += day_increment
+                ptr += timedelta(days=1)
+
+        return (date
+                for date_range in self.dates
+                for date in date_gen(date_range))
 
 
 m = Movie('sw', [
