@@ -20,10 +20,10 @@ class RepeatDecorator:
             func()
             for i in range(self.count - 1):
                 time.sleep(self.pause)
-                print("pause:", self.pause, end = " ")
-                self._update_sleep_time()
                 curr = time.perf_counter()
+                print("pause:", self.pause, end = " ")
                 print("time passed:", curr - start)
+                self._update_sleep_time()
                 func()
 
         return wrapper
@@ -37,30 +37,7 @@ class RepeatDecorator:
 
 @RepeatDecorator(5, 1, 1, 10)
 def func():
-    print("func called")
+    print("<<< func called >>>")
 
 if __name__ == "__main__":
     func()
-
-
-
-
-
-# def repeat_decorator(addition: str):
-
-#     def actual_decorator(f):
-
-#         def wrapper():
-#             f()
-#             print(addition)
-    
-#     return wrapper
-
-#     return actual_decorator
-
-
-# @repeat_decorator("Johnny!")
-# def func():
-#     print("here's", end=' ')
-
-# func()
