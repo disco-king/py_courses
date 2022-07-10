@@ -48,17 +48,3 @@ if __name__ == "__main__":
     print(adder([1, 2, 3]))
     print(adder([4, 5, 6]))
 
-# def state_save():
-#     calls: int = 0
-
-#     def c():
-#         nonlocal calls
-#         calls += 1
-#         print("calling for the", calls, "time")
-
-#     return c
-
-# f = state_save()
-
-# for i in range(3):
-#     f()
