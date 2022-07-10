@@ -8,14 +8,6 @@ class Range:
     def __iter__(self):
         return Iterator(self)
 
-    def __next__(self):
-        self.count += 1
-        if self.state >= self.limit:
-            raise StopIteration
-        ret = self.state
-        self.state += 1
-        return ret
-
 class Iterator:
 
     def __init__(self, obj):
