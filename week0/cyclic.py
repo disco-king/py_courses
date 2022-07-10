@@ -22,10 +22,10 @@ def get_obj(code):
 
 class CyclicIterator:
     def __init__(self, iterable):
-        self.iterable = iterable
+        self.iterator = iter(iterable)
 
     def __iter__(self):
-        self.state = iter(deepcopy(self.iterable))
+        self.state = deepcopy(self.iterator)
         return self
 
     def __next__(self):
@@ -38,7 +38,8 @@ class CyclicIterator:
 
 if __name__ == '__main__':
 
-    for code in range(7):
+    for code in range(5):
+
         count = 0
         obj = get_obj(code)
         it = CyclicIterator(obj)
