@@ -1,7 +1,7 @@
 import redis
 
 
-def cache_decorator(f, verbose=False, **kwargs):
+def cache_decorator(f, verbose=True, **kwargs):
     """
     Функция принимает в качестве аргумента
     декорируемую функцию, а возвращает объект
@@ -63,19 +63,14 @@ def cache_decorator(f, verbose=False, **kwargs):
 
     return wrapper
 
-def multiplier(number: int):
-    return number * 2
-
-# Используем более эксплицитный способ декорирования,
-# чтобы передать True в качестве значения verbose.
-# Также возможно декорировать функцию и через
-# @cache_decorator, но только с дефолтными параметрами.
-
+# Вызов декоратора с дефолтными значениями аргументов.
 # Если необходимо выставить аргументы для подключения
 # к серверу Redis (например, сторонний ip, порт, пароль и пр.),
-# можно задать их в качестве **kwargs в вызове декоратора.
+# можно задать их в качестве **kwargs в эксплицитном вызове декоратора.
 
-multiplier = cache_decorator(multiplier, True)
+@cache_decorator
+def multiplier(number: int):
+    return number * 2
 
 
 if __name__ == '__main__':
