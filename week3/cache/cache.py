@@ -1,5 +1,5 @@
 
-def cache_decorator(f, verbose=False):
+def cache_decorator(f, verbose=True):
     """
     Функция принимает в качестве аргумента
     декорируемую функцию, а возвращает
@@ -38,21 +38,23 @@ def cache_decorator(f, verbose=False):
     return wrapper
 
 
-@cache_decorator
 def multiplier(number: int):
     return number * 2
 
-# Еще две функции чтобы убедиться,
+multiplier = cache_decorator(multiplier, False)
+
+# Еще две функции, чтобы убедиться,
 # что декоратор может работать с любым
 # количеством и типами аргументов.
+
+@cache_decorator
 def adder(item):
     return item + item
 
+@cache_decorator
 def str_multiplier(string: str, number: int):
     return string * number
 
-adder = cache_decorator(adder, True)
-str_multiplier = cache_decorator(str_multiplier, True)
 
 if __name__ == '__main__':
 
@@ -62,7 +64,8 @@ if __name__ == '__main__':
     print(-89, ': ', multiplier(-89), sep='')
     print(3000, ': ', multiplier(3000), sep='')
 
-    multiplier = cache_decorator(multiplier, True)
+    multiplier = cache_decorator(multiplier)
+
     print('\nТеперь убедимся, что кэш работает.\n'
         'При первом вызове с аргументом X\n'
         'функция печатает ВЫЗОВ, при повторном - КЭШ:\n')
