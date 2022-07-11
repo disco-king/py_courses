@@ -1,5 +1,5 @@
-from test import Range, Range2
 from copy import deepcopy
+from classes import Range, Range2
 
 
 def get_obj(code):
@@ -17,18 +17,30 @@ def get_obj(code):
         obj = Range(3)
     elif code == 6:
         obj = Range2(3)
+    elif code == 7:
+        obj = [-1]
+    elif code == 8:
+        print('[empty list]', end='')
+        obj = []
     return obj
 
 
 class CyclicIterator:
     def __init__(self, iterable):
+        """ Инициализация атрибута iterator. """
         self.iterator = iter(iterable)
 
     def __iter__(self):
+        """ Копирования атрибута iterator в state. """
         self.state = deepcopy(self.iterator)
         return self
 
     def __next__(self):
+        """
+        Итерирование с использованием state.
+        При получении StopIteration значение state
+        перезаписывается исходным значением iterator.
+        """
         try:
             return next(self.state)
         except StopIteration:
@@ -38,7 +50,7 @@ class CyclicIterator:
 
 if __name__ == '__main__':
 
-    for code in range(5):
+    for code in range(9):
 
         count = 0
         obj = get_obj(code)
@@ -50,8 +62,11 @@ if __name__ == '__main__':
         while True:
             if count >= 10:
                 break
-            print(next(it), end=' ')
-            count += 1
+            try:
+                print(next(it), end=' ')
+                count += 1
+            except StopIteration:
+                break
         print()
 
         count = 0

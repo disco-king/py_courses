@@ -1,7 +1,7 @@
 import redis
 
 
-def cache_decorator(f, verbose=False):
+def cache_decorator(f, verbose=False, **kwargs):
     """
     Функция принимает в качестве аргумента
     декорируемую функцию, а возвращает объект
@@ -11,12 +11,16 @@ def cache_decorator(f, verbose=False):
     выводить диагностические сообщения.
     """
     try:
-        # Пробуем подключиться к БД,
+        # Пробуем подключиться к серверу БД,
         # проверяем подключение с помощью ping.
-        r = redis.Redis()
+        # Если настройки сервера отличаются
+        # от дефолтных, понадобится задать
+        # необходимые аргументы в вызове Redis().
+        r = redis.Redis(**kwargs)
         r.ping()
     except:
-        print('Нет доступа к Redis')
+        print('Нет доступа к Redis.\n'
+                'Проверьте настройки сервера.')
         return None
 
     # Кэшируемые данные хранятся в БД
@@ -58,12 +62,18 @@ def cache_decorator(f, verbose=False):
 
     return wrapper
 
-
 def multiplier(number: int):
     return number * 2
 
 # Используем более эксплицитный способ декорирования,
 # чтобы передать True в качестве значения verbose.
+# Также возможно декорировать функцию и через
+# @cache_decorator, но только с дефолтными параметрами.
+
+# Если необходимо выставить аргументы для подключения
+# к серверу Redis (например, сторонний ip, порт, пароль и пр.),
+# можно задать их в качестве **kwargs в вызове декоратора.
+
 multiplier = cache_decorator(multiplier, True)
 
 
