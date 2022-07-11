@@ -50,23 +50,23 @@ if __name__ == '__main__':
 
     movies = []
 
-    movies.append(Movie('больше промежутков, следующий месяц и год', [
+    movies.append(Movie('Больше промежутков, следующий месяц и год', [
         (datetime(2020, 1, 15), datetime(2020, 1, 18)),
         (datetime(2020, 5, 25), datetime(2020, 6, 3)),
         (datetime(2021, 9, 30), datetime(2021, 10, 1)),
         (datetime(2021, 12, 30), datetime(2022, 1, 3))
     ]))
 
-    movies.append(Movie('один промежуток', [
+    movies.append(Movie('Один промежуток', [
         (datetime(2020, 7, 26), datetime(2020, 8, 2))
     ]))
 
-    movies.append(Movie('ошибка в одном из промежутков', [
+    movies.append(Movie('Ошибка в одном из промежутков', [
         (datetime(2020, 1, 15), datetime(2020, 1, 25)),
         (datetime(2020, 3, 7), datetime(2020, 3, 1))
     ]))
 
-    movies.append(Movie('пустое расписание', []))
+    movies.append(Movie('Пустое расписание', []))
 
     for mov in movies:
         print(f"\n{mov.title}:\n")
