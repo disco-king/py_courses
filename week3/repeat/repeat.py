@@ -16,6 +16,7 @@ class RepeatDecorator:
     def __call__(self, func):
         """
         Магический метод, позволяющий вызвать класс как функцию.
+        Возвращает функцию-аргумент, "обернутую" во wrapper.
         """
         def wrapper(*args, **kwargs):
             """
