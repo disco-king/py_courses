@@ -15,6 +15,7 @@ class Place(ABC):
         """
         pass
 
+    @abstractmethod
     def get_location(self):
         """
         Метод определяет, как именно назвать спасенное место.
