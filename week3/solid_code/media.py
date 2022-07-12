@@ -12,8 +12,7 @@ class Media:
         Метод получает в качестве аргументов героя и место,
         объявляет о спасении места героем. Ничего не возвращает
         """
-        place_name = getattr(place, 'name', 
-                            getattr(place, 'coordinates', 'place'))
+        place_name = place.get_location();
         print(f'{hero.name} saved the {place_name}!')
 
 
