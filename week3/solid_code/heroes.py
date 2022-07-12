@@ -35,17 +35,18 @@ class KarateMaster:
 
 class SuperHero:
 
-    def __init__(self, name, can_use_ultimate_attack=True):
+	# СМИ бывают разные. Добавляем объект media в качестве параметра.
+    def __init__(self, name, can_use_ultimate_attack=True, media=Media()):
         """
-        Метод присваивает атрибутам name и
+        Метод присваивает атрибутам name, media и
         can_use_ultimate_attack значения поступивших параметров.
-        Определения атрибутов finder и Media от параметров
-        не зависят и определяются одинаково для каждого объекта класса.
+        Определения атрибутa finder от параметров
+        не зависит и определяeтся одинаково для каждого объекта класса.
         """
         self.name = name
         self.can_use_ultimate_attack = can_use_ultimate_attack
         self.finder = AntagonistFinder()
-        self.media = Media()
+        self.media = media
 
     def find(self, place):
         """
@@ -121,8 +122,7 @@ class ChuckNorris(SuperHero, Shooter, KarateMaster):
         Атрибут media переопределяется
         в соответствии со спецификой класса. 
         """
-        super(ChuckNorris, self).__init__('Chuck Norris', True)
-        self.media = TV()
+        super(ChuckNorris, self).__init__('Chuck Norris', True, TV())
 
     # Хотя Чак - тоже своего рода Супермен,
     # атаки у него должны быть другие.
