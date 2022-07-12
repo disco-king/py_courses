@@ -1,45 +1,22 @@
 from copy import deepcopy
-from classes import Range, Range2
-
-
-def get_obj(code):
-    if code == 0:
-        obj = range(3)
-    elif code == 1:
-        obj = [0, 1, 2]
-    elif code == 2:
-        obj = (0, 1, 2)
-    elif code == 3:
-        obj = {0, 1, 2}
-    elif code == 4:
-        obj = '012'
-    elif code == 5:
-        obj = Range(3)
-    elif code == 6:
-        obj = Range2(3)
-    elif code == 7:
-        obj = [-1]
-    elif code == 8:
-        print('[empty list]', end='')
-        obj = []
-    return obj
+from classes import run_test
 
 
 class CyclicIterator:
     def __init__(self, iterable):
-        """ Инициализация атрибута iterator. """
-        self.iterator = iter(iterable)
+        """ Инициализация атрибута iterable. """
+        self.iterable = iterable
 
     def __iter__(self):
-        """ Копирования атрибута iterator в state. """
-        self.state = deepcopy(self.iterator)
+        """ Сохранение итаратора от iterable в state. """
+        self.state = iter(self.iterable)
         return self
 
     def __next__(self):
         """
         Итерирование с использованием state.
         При получении StopIteration значение state
-        перезаписывается исходным значением iterator.
+        перезаписывается значением iter(iterable).
         """
         try:
             return next(self.state)
@@ -50,33 +27,4 @@ class CyclicIterator:
 
 if __name__ == '__main__':
 
-    for code in range(9):
-
-        count = 0
-        obj = get_obj(code)
-        it = CyclicIterator(obj)
-        print(type(obj))
-
-        print('while loop:\t', end='')
-        it = iter(it)
-        while True:
-            if count >= 10:
-                break
-            try:
-                print(next(it), end=' ')
-                count += 1
-            except StopIteration:
-                break
-        print()
-
-        count = 0
-
-        print('for loop:\t', end='')
-        for i in it:
-            if count >= 10:
-                break
-            print(i, end=' ')
-            count += 1
-        print()
-
-        print()
+    run_test(CyclicIterator)
