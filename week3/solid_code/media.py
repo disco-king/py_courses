@@ -1,40 +1,39 @@
-# В дополнение к общему классу Media
-# (который, кстати, поддерживает и координаты планет)
-# создадим двух потомков с идентичными сигнатурами
-# их classmethod'ов, чтобы любой герой мог выбрать
-# СМИ себе по душе.
+from abc import ABC, abstractmethod
+from heroes import SuperHero
+from places import Place
 
-class Media:
+# Абстрактный класс Media имплементируют
+# потомки, дополнив функционал метода make_news
+# и определив абстрактный метод denote_medium.
 
-    @classmethod
-    def make_news(cls, hero, place):
+class Media(ABC):
+
+    def make_news(self, hero: SuperHero, place: Place):
         """
         Метод получает в качестве аргументов героя и место,
         объявляет о спасении места героем. Ничего не возвращает
         """
-        place_name = place.get_location();
-        print(f'{hero.name} saved the {place_name}!')
+        place_name = place.get_location()
+        hero_name = hero.get_name()
+        self.denote_medium()
+        print(f'{hero_name} saved the {place_name}!')
+
+    @abstractmethod
+    def denote_medium(self):
+        """
+        Метод объявляет, какое именно СМИ сообщает новость.
+        Ничего не принимает и не возвращает.
+        """
+        pass
 
 
 class TV(Media):
 
-    @classmethod
-    def make_news(cls, hero, place):
-        """
-        Метод изменяет функционал
-        make_news базового класса.
-        """
-        print('TV report: ', end='')
-        super(TV, cls).make_news(hero, place)
+    def denote_medium(self):
+        print('TV report:', end=' ')
 
 
 class NewsPaper(Media):
 
-    @classmethod
-    def make_news(cls, hero, place):
-        """
-        Метод изменяет функционал
-        make_news базового класса.
-        """
-        print('Newspaper article: ', end='')
-        super(NewsPaper, cls).make_news(hero, place)
+    def denote_medium(self):
+        print('TV report:', end=' ')
