@@ -7,9 +7,9 @@ class RepeatDecorator:
         """ Инициализация атрибутов параметрами init. """
         self.count = count
         if start_sleep_time > border_sleep_time:
-            self.sleep_time = border_sleep_time
+            self.pause = border_sleep_time
         else:
-            self.sleep_time = start_sleep_time
+            self.pause = start_sleep_time
         self.factor = factor
         self.border_time = border_sleep_time
 
@@ -30,25 +30,25 @@ class RepeatDecorator:
 
             for i in range(1, self.count + 1):
                 res = func(*args, **kwargs)
-                time.sleep(self.sleep_time)
-                print(f"Запуск номер {i}. Ожидание: {self.sleep_time} сек."
+                time.sleep(self.pause)
+                print(f"Запуск номер {i}. Ожидание: {self.pause} сек."
                         f" Результат декорируемой функции: {res}")
-                self._update_sleep_time(i)
+                self._update_sleep_time()
 
             print("Конец работы")
 
         return wrapper
 
-    def _update_sleep_time(self, iteration):
+    def _update_sleep_time(self):
         """
         Обновление времени ожидания.
         Если время ожидания превысило лимит,
         ему присвается значение лимита.
         """
-        if self.sleep_time < self.border_time:
-            self.sleep_time *= self.factor ** iteration
-        if self.sleep_time > self.border_time:
-            self.sleep_time = self.border_time
+        if self.pause < self.border_time:
+            self.pause *= self.factor
+        if self.pause > self.border_time:
+            self.pause = self.border_time
 
 
 @RepeatDecorator(5, 1, 2, 10)
