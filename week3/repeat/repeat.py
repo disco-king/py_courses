@@ -6,6 +6,7 @@ class RepeatDecorator:
                     factor: int, border_sleep_time: float):
         """ Инициализация атрибутов параметрами init. """
         self.count = count
+        self.start_sleep_time = start_sleep_time
         if start_sleep_time > border_sleep_time:
             self.pause = border_sleep_time
         else:
