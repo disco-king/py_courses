@@ -1,9 +1,10 @@
-from media import Media, TV, NewsPaper
+from media import Media, TV, NewsPaper, NewsMaker
 from heroes import SuperHero, Superman, ChuckNorris, YoungJedi
 from places import Place, Kostroma, Tokyo, Jupiter
 
 # Логичнее во второй аннотации дать
-# общий для всех мест абстрактный класс Place
+# общий для всех мест абстрактный класс Place.
+# То же относится к абстрактным классам супер-героя и СМИ.
 def save_the_place(hero: SuperHero, place: Place, media: Media):
     """
     Функция принимает героя и место, которое тот должен спасти,
@@ -15,7 +16,8 @@ def save_the_place(hero: SuperHero, place: Place, media: Media):
     hero.attack()
     if hero.can_use_ultimate_attack:
         hero.ultimate()
-    media.make_news(hero, place)
+    news = NewsMaker.get_info(hero, place)
+    media.make_news(news)
 
 
 if __name__ == '__main__':
