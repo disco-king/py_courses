@@ -1,4 +1,3 @@
-from typing import Union
 from media import Media, TV, NewsPaper
 from heroes import SuperHero, Superman, ChuckNorris, YoungJedi
 from places import Place, Kostroma, Tokyo, Jupiter
