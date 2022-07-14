@@ -3,15 +3,15 @@ from heroes import SuperHero
 from places import Place
 
 # Абстрактный класс Media имплементируют
-# потомки, дополнив функционал метода make_news
-# и определив абстрактный метод denote_medium.
+# потомки, дополняя функционал метода make_news
+# и определяя абстрактный метод denote_medium.
 
 class Media(ABC):
 
     def make_news(self, hero: SuperHero, place: Place):
         """
         Метод получает в качестве аргументов героя и место,
-        объявляет о спасении места героем. Ничего не возвращает
+        объявляет о спасении места героем. Ничего не возвращает.
         """
         place_name = place.get_location()
         hero_name = hero.get_name()
@@ -36,4 +36,4 @@ class TV(Media):
 class NewsPaper(Media):
 
     def denote_medium(self):
-        print('TV report:', end=' ')
+        print('Newspaper article:', end=' ')

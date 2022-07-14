@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-from typing import List
 
 # С помощью абстрактного класса задаем формальные требования
 # для всех классов-потомков, а именно - необходимость
