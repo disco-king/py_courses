@@ -1,7 +1,7 @@
 from http import HTTPStatus
 from typing import Optional
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Response, status
 
 from src.api.v1.schemas import PostCreate, PostListResponse, PostModel
 from src.services import PostService, get_post_service
@@ -52,3 +52,14 @@ def post_create(
 ) -> PostModel:
     post: dict = post_service.create_post(post=post)
     return PostModel(**post)
+
+@router.delete(
+    path="/{post_id}",
+    summary="Удалить пост",
+    tags=["posts"],
+)
+def post_delete(
+    post_id: int, post_service: PostService = Depends(get_post_service),
+) -> Response:
+    post_service.delete_post(item_id=post_id)
+    return Response(status_code=status.HTTP_204_NO_CONTENT)

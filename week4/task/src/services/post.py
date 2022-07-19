@@ -36,6 +36,12 @@ class PostService(ServiceMixin):
         self.session.commit()
         self.session.refresh(new_post)
         return new_post.dict()
+    
+    def delete_post(self, item_id: int) -> None:
+        """Удалить пост."""
+        post = self.session.query(Post).filter(Post.id == item_id).first()
+        self.session.delete(post)
+        self.session.commit()
 
 
 # get_post_service — это провайдер PostService. Синглтон
