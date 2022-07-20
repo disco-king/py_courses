@@ -21,7 +21,7 @@ class PostCreate(PostBase):
 class PostModel(PostBase):
     id: int
     created_at: datetime
-
+    author: str
 
 class PostListResponse(BaseModel):
     posts: list[PostModel] = []

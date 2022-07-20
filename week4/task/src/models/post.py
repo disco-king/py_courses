@@ -12,3 +12,5 @@ class Post(SQLModel, table=True):
     description: str = Field(nullable=False)
     views: int = Field(default=0)
     created_at: datetime = Field(default=datetime.utcnow(), nullable=False)
+    author: Optional[str] = Field(default="placeholder")
+
