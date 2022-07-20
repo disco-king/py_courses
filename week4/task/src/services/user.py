@@ -5,6 +5,7 @@ import uuid
 
 from fastapi import Depends
 from sqlmodel import Session
+from passlib.hash import bcrypt
 
 from src.api.v1.schemas import UserCreate, UserModel
 from src.db import AbstractCache, get_cache, get_session
@@ -20,7 +21,7 @@ class UserService(ServiceMixin):
         """Создать пользователя."""
         user_dict = user.dict()
         user_dict["uuid"] = str(uuid.uuid4())
-        user_dict["password_hash"] = hash(user.password)
+        user_dict["password_hash"] = bcrypt.hash(user.password)
         user_dict["is_totp_enabled"] = False
         user_dict["is_superuser"] = False
         new_user = User(**user_dict)
