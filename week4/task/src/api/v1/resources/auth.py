@@ -5,7 +5,8 @@ from fastapi import APIRouter, Depends, HTTPException, Response, status
 from fastapi.security import OAuth2PasswordRequestForm
 
 from src.api.v1.schemas import UserCreate, UserModel, Token
-from src.services import AuthService, UserService, get_user_service
+from src.services import AuthService, get_auth_service 
+from src.services import UserService, get_user_service
 
 router = APIRouter()
 
@@ -28,8 +29,8 @@ def user_create(
     tags=["users"]
 )
 def log_in(
-    form_data: OAuth2PasswordRequestForm = Depends(),
-    service: AuthService = Depends()
+    service: AuthService = Depends(get_auth_service),
+    form_data: OAuth2PasswordRequestForm = Depends()
 ) -> Token:
     return service.authenticate(
         form_data.username,

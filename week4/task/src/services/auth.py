@@ -1,22 +1,26 @@
 from datetime import datetime, timedelta
 
 from passlib.hash import bcrypt
-from sqlmodel import Session #had to add that for __init__
+from sqlmodel import Session
 from jose import jwt, JWTError
 from fastapi import HTTPException, Depends, status
 from fastapi.security import OAuth2PasswordBearer
 from pydantic import ValidationError
 
-from src.services.mixins import ServiceMixin # maybe should use this, but can't
+from src.db import AbstractCache, get_cache, get_session
+from src.services import ServiceMixin
 from src.services import UserService, get_user_service
 from src.models.user import User
 from src.api.v1.schemas import UserModel, UserCreate, Token
 from src.core.config import JWT_ALGORITHM
 from src.core.config import JWT_SECRET_KEY
 from src.core.config import JWT_EXPIRATION_TIME
-from src.db import get_session # this one is also forced
 
-__all__ = ("AuthService", "get_current_user")
+__all__ = (
+    "AuthService",
+    "get_current_user",
+    "get_auth_service"
+)
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/login")
 
@@ -25,7 +29,7 @@ def get_current_user(token: str = Depends(oauth2_scheme)):
     return AuthService.validate_token(token)
 
 
-class AuthService:
+class AuthService(ServiceMixin):
 
     @classmethod
     def verify_pswd(cls, plain_pswd: str, hashed_pswd: str) -> bool:
@@ -82,8 +86,8 @@ class AuthService:
 
         return Token(access_token=token)
 
-    def __init__(self, session: Session = Depends(get_session)):
-        self.session = session
+    # def __init__(self, session: Session = Depends(get_session)):
+    #     self.session = session
 
 
     def authenticate(self, username: str, password: str) -> Token:
@@ -101,3 +105,9 @@ class AuthService:
             raise exception
 
         return self.create_token(user)
+
+def get_auth_service(
+    cache: AbstractCache = Depends(get_cache),
+    session: Session = Depends(get_session),
+) -> AuthService:
+    return AuthService(cache=cache, session=session)

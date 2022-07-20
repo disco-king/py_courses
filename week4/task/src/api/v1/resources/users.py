@@ -5,9 +5,9 @@ from fastapi import APIRouter, Depends, HTTPException, Response, status
 
 from src.models import User
 from src.api.v1.schemas import UserCreate, UserModel
-from src.services import AuthService, UserService
-from src.services import get_user_service, get_current_user
-
+from src.services import AuthService, get_auth_service 
+from src.services import UserService, get_user_service
+from src.services import get_current_user
 
 router = APIRouter()
 @router.get(
