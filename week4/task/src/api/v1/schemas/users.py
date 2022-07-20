@@ -6,6 +6,7 @@ from pydantic import BaseModel
 __all__ = (
     "UserModel",
     "UserCreate",
+    "Token"
 )
 
 
@@ -25,3 +26,8 @@ class UserModel(UserBase):
     is_active: bool = True
     uuid: str
     created_at: datetime
+
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str = "bearer"

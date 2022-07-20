@@ -23,5 +23,6 @@ class PostModel(PostBase):
     created_at: datetime
     author: str
 
+
 class PostListResponse(BaseModel):
     posts: list[PostModel] = []
