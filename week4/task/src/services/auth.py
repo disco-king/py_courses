@@ -74,7 +74,7 @@ class AuthService(ServiceMixin):
             if key == "password_hash":
                 continue
             if isinstance(value, datetime):
-                payload[key] = str(value)
+                payload[key] = int(value.timestamp())
             else:
                 payload[key] = value
 
