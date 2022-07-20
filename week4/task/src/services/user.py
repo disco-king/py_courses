@@ -20,14 +20,20 @@ class UserService(ServiceMixin):
         """Создать пользователя."""
         user_dict = user.dict()
         user_dict["uuid"] = str(uuid.uuid4())
-        user_dict["password_hash"] = hash(user["password"])
+        user_dict["password_hash"] = hash(user.password)
         user_dict["is_totp_enabled"] = False
         user_dict["is_superuser"] = False
         new_user = User(**user_dict)
         self.session.add(new_user)
         self.session.commit()
-        self.session.refresh(new_post)
+        self.session.refresh(new_user)
         return new_user.dict()
+
+    def get_user_detail(self, username: str) -> Optional[dict]:
+        """Посмотреть пользователя."""
+        user = self.session.query(User).filter(User.username == username).first()
+
+        return user.dict() if user else None
 
 
 

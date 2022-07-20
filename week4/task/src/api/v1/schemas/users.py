@@ -1,5 +1,5 @@
 from datetime import datetime
-# from typing import List, Optional
+from typing import List, Optional
 
 from pydantic import BaseModel
 
@@ -20,7 +20,6 @@ class UserCreate(UserBase):
 
 class UserModel(UserBase):
     id: int 
-    # roles: Optional[List[str]] = []
     is_superuser: bool
     is_totp_enabled: bool
     is_active: bool = True
