@@ -9,7 +9,6 @@ from pydantic import ValidationError
 
 from src.db import AbstractCache, get_cache, get_session
 from src.services import ServiceMixin
-from src.services import UserService, get_user_service
 from src.models.user import User
 from src.api.v1.schemas import UserModel, UserCreate, Token
 from src.core.config import JWT_ALGORITHM
@@ -42,9 +41,9 @@ class AuthService(ServiceMixin):
     @classmethod
     def validate_token(cls, token: str) -> UserModel:
         exception = HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="invalid credentials"
-            )
+                        status_code=status.HTTP_401_UNAUTHORIZED,
+                        detail="invalid credentials"
+                    )
         try:
             payload = jwt.decode(
                 token,
@@ -67,7 +66,6 @@ class AuthService(ServiceMixin):
             "iat": now,
             "nbf": now,
             "exp": now + timedelta(minutes=int(JWT_EXPIRATION_TIME)),
-            # "sub": user.username,
         }
 
         for key, value in user.dict().items():
@@ -86,15 +84,12 @@ class AuthService(ServiceMixin):
 
         return Token(access_token=token)
 
-    # def __init__(self, session: Session = Depends(get_session)):
-    #     self.session = session
-
 
     def authenticate(self, username: str, password: str) -> Token:
         exception = HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="incorrect username or password"
-            )
+                        status_code=status.HTTP_401_UNAUTHORIZED,
+                        detail="incorrect username or password"
+                    )
         
         user = self.session.query(User).filter(User.username == username).first()
         
