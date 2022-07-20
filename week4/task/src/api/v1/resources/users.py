@@ -22,19 +22,6 @@ def user_detail(
     return current_user
 
 
-@router.get(
-    path="/{username}",
-    response_model=UserModel,
-    summary="Посмотреть чей-то профиль",
-    tags=["users"],
-)
-def user_detail(
-    username: str, user_service: UserService = Depends(get_user_service),
-) -> UserModel:
-    user: Optional[dict] = user_service.get_user_detail(username=username)
-    return UserModel(**user)
-
-
 @router.put(
     path="/me",
     tags=["users"]

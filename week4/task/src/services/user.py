@@ -33,7 +33,6 @@ class UserService(ServiceMixin):
     def get_user_detail(self, username: str) -> Optional[dict]:
         """Посмотреть пользователя."""
         user = self.session.query(User).filter(User.username == username).first()
-
         return user.dict() if user else None
 
 
