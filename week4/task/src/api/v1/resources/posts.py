@@ -18,7 +18,7 @@ def find_post(
     post: Optional[dict] = post_service.get_post_detail(item_id=post_id)
     if not post:
         # Если пост не найден, отдаём 404 статус
-        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="post not found")
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="Post not found")
     return post
 
 
@@ -34,7 +34,7 @@ def post_list(
     posts: dict = post_service.get_post_list()
     if not posts:
         # Если посты не найдены, отдаём 404 статус
-        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="posts not found")
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="Posts not found")
     return PostListResponse(**posts)
 
 
@@ -82,7 +82,7 @@ def post_delete(
     if post["author"] != current_user.username:
         raise HTTPException(
                     status_code=status.HTTP_401_UNAUTHORIZED,
-                    detail="invalid credentials"
+                    detail="Invalid credentials"
                 )
     post_service.delete_post(item_id=post_id)
     return Response(status_code=status.HTTP_204_NO_CONTENT)

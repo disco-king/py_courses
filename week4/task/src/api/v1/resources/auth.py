@@ -3,6 +3,7 @@ from typing import Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Response, status
 from fastapi.security import OAuth2PasswordRequestForm
+from sqlalchemy.exc import IntegrityError
 
 from src.api.v1.schemas import UserCreate, UserModel, Token
 from src.services import AuthService, get_auth_service 
@@ -19,7 +20,13 @@ def user_create(
     user: UserCreate,
     user_service: UserService = Depends(get_user_service)
 ) -> dict:
-    user: dict = user_service.create_user(user=user)
+    try:
+        user: dict = user_service.create_user(user=user)
+    except IntegrityError:
+        raise HTTPException(
+            status_code=HTTPStatus.BAD_REQUEST,
+            detail="User with this name or email already exists"
+        )
     return {"msg": "User created.", "user": UserModel(**user)}
 
 

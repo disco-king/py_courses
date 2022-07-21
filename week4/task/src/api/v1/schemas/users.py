@@ -1,11 +1,12 @@
 from datetime import datetime
-from typing import List, Optional
+from typing import Optional
 
 from pydantic import BaseModel
 
 __all__ = (
     "UserModel",
     "UserCreate",
+    "UserUpdate",
     "Token"
 )
 
@@ -26,6 +27,12 @@ class UserModel(UserBase):
     is_active: bool = True
     uuid: str
     created_at: datetime
+
+
+class UserUpdate(BaseModel):
+    username: Optional[str] = None
+    email: Optional[str] = None
+    password: Optional[str] = None
 
 
 class Token(BaseModel):

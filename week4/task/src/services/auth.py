@@ -42,7 +42,7 @@ class AuthService(ServiceMixin):
     def validate_token(cls, token: str) -> UserModel:
         exception = HTTPException(
                         status_code=status.HTTP_401_UNAUTHORIZED,
-                        detail="invalid credentials"
+                        detail="Invalid credentials"
                     )
         try:
             payload = jwt.decode(
@@ -88,7 +88,7 @@ class AuthService(ServiceMixin):
     def authenticate(self, username: str, password: str) -> Token:
         exception = HTTPException(
                         status_code=status.HTTP_401_UNAUTHORIZED,
-                        detail="incorrect username or password"
+                        detail="Incorrect username or password"
                     )
         
         user = self.session.query(User).filter(User.username == username).first()

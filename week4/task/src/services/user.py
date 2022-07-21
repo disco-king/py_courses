@@ -30,6 +30,19 @@ class UserService(ServiceMixin):
         self.session.refresh(new_user)
         return new_user.dict()
 
+    def update_user(self, data: dict) -> User:
+        updated_user = User(**data)
+        if "password" in data:
+            updated_user.password_hash = bcrypt.hash(data["password"])
+        old_user = self.session.query(User).filter(User.uuid == updated_user.uuid).first()
+
+        self.session.delete(old_user)
+        self.session.add(updated_user)
+
+        self.session.commit()
+        self.session.refresh(updated_user)
+        return updated_user
+
     def get_user_detail(self, username: str) -> Optional[dict]:
         """Посмотреть пользователя."""
         user = self.session.query(User).filter(User.username == username).first()
