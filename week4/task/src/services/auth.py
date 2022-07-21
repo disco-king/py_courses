@@ -41,18 +41,23 @@ class AuthService(ServiceMixin):
 
     @classmethod
     def validate_token(cls, token: str) -> UserModel:
-        exception = HTTPException(
-                        status_code=status.HTTP_401_UNAUTHORIZED,
-                        detail="Invalid credentials"
-                    )
+
         try:
             payload = jwt.decode(
                 token,
                 JWT_SECRET_KEY,
                 algorithms=[JWT_ALGORITHM]
             )
-        except JWTError:
-            raise exception
+        except jwt.ExpiredSignatureError:
+            raise HTTPException(
+                    status_code=status.HTTP_401_UNAUTHORIZED,
+                    detail="Access token has expired"
+                )
+        except jwt.InvalidTokenError:
+            raise HTTPException(
+                    status_code=status.HTTP_401_UNAUTHORIZED,
+                    detail="Access token is invalid"
+                )
         
         user = UserModel.parse_obj(payload)
 
