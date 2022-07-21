@@ -43,9 +43,9 @@ class UserService(ServiceMixin):
         self.session.refresh(updated_user)
         return updated_user
 
-    def get_user_detail(self, username: str) -> Optional[dict]:
+    def get_user_detail(self, user_uuid: str) -> Optional[dict]:
         """Посмотреть пользователя."""
-        user = self.session.query(User).filter(User.username == username).first()
+        user = self.session.query(User).filter(User.uuid == user_uuid).first()
         return user.dict() if user else None
 
 

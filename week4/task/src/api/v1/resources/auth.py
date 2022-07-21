@@ -6,8 +6,10 @@ from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.exc import IntegrityError
 
 from src.api.v1.schemas import UserCreate, UserModel, Token
-from src.services import AuthService, get_auth_service 
+from src.services import AuthService, get_auth_service
+from src.services import get_refresh_uuid
 from src.services import UserService, get_user_service
+from src.models import User
 
 router = APIRouter()
 
@@ -47,3 +49,20 @@ def log_in(
         form_data.username,
         form_data.password
     )
+
+@router.post(
+    path="/refresh",
+    tags=["users"],
+    summary="Обновить токены"
+)
+def refresh(
+    auth_service: AuthService = Depends(get_auth_service),
+    user_service: UserService = Depends(get_user_service),
+    user_uuid: str = Depends(get_refresh_uuid)
+) -> dict:
+    user_data: dict = user_service.get_user_detail(user_uuid)
+    token: Token = auth_service.create_token(User(**user_data))
+    return {
+        "access_token": token.access_token,
+        "refresh_token": token.refresh_token
+    }

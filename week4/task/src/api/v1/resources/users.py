@@ -33,7 +33,7 @@ def user_update(
     user_service: UserService = Depends(get_user_service),
     auth_service: AuthService = Depends(get_auth_service)
 ) -> dict:
-    current_data = user_service.get_user_detail(current_user.username)
+    current_data = user_service.get_user_detail(current_user.uuid)
     current_data.update(new_data.dict(exclude_unset=True))
 
     ret_user = user_service.update_user(current_data)
