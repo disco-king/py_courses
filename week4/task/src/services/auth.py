@@ -66,7 +66,7 @@ class AuthService(ServiceMixin):
         except jwt.ExpiredSignatureError:
             raise HTTPException(status_code=code, detail="Token has expired")
 
-        except jwt.InvalidTokenError:
+        except JWTError:
             raise HTTPException(status_code=code, detail="Token is invalid")
 
         if payload["type"] != tok_type:

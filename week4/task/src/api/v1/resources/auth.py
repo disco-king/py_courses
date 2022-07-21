@@ -2,10 +2,9 @@ from http import HTTPStatus
 from typing import Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Response, status
-from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.exc import IntegrityError
 
-from src.api.v1.schemas import UserCreate, UserModel, Token
+from src.api.v1.schemas import UserCreate, UserModel, UserLogin, Token
 from src.services import AuthService, get_auth_service
 from src.services import get_refresh_uuid
 from src.services import UserService, get_user_service
@@ -41,12 +40,12 @@ def user_create(
     summary="Зайти в свой профиль"
 )
 def log_in(
+    user_data: UserLogin,
     service: AuthService = Depends(get_auth_service),
-    form_data: OAuth2PasswordRequestForm = Depends()
 ) -> dict:
     token: Token = service.authenticate(
-        form_data.username,
-        form_data.password
+        user_data.username,
+        user_data.password
     )
     return {
         "access_token": token.access_token,
