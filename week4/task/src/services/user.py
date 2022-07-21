@@ -51,7 +51,6 @@ class UserService(ServiceMixin):
 
 
 # get_user_service — это провайдер UserService. Синглтон
-@lru_cache()
 def get_user_service(
     cache: AbstractCache = Depends(get_cache),
     session: Session = Depends(get_session),

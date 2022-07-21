@@ -15,9 +15,11 @@ router = APIRouter()
     path="/signup",
     summary="Зарегистрировать нового пользователя",
     tags=["users"],
+    status_code=201
 )
 def user_create(
     user: UserCreate,
+    response: Response,
     user_service: UserService = Depends(get_user_service)
 ) -> dict:
     try:
@@ -27,13 +29,15 @@ def user_create(
             status_code=HTTPStatus.BAD_REQUEST,
             detail="User with this name or email already exists"
         )
+
     return {"msg": "User created.", "user": UserModel(**user)}
 
 
 @router.post(
     path="/login",
     response_model=Token,
-    tags=["users"]
+    tags=["users"],
+    summary="Зайти в свой профиль"
 )
 def log_in(
     service: AuthService = Depends(get_auth_service),

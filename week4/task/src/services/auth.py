@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+import uuid
 
 from passlib.hash import bcrypt
 from sqlmodel import Session
@@ -66,6 +67,8 @@ class AuthService(ServiceMixin):
             "iat": now,
             "nbf": now,
             "exp": now + timedelta(minutes=int(JWT_EXPIRATION_TIME)),
+            "jti": str(uuid.uuid4()),
+            "type": "access"
         }
 
         for key, value in user.dict().items():
