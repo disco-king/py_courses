@@ -7,7 +7,7 @@ from src.models import User
 from src.api.v1.schemas import UserCreate, UserUpdate, UserModel, Token
 from src.services import AuthService, get_auth_service 
 from src.services import UserService, get_user_service
-from src.services import get_current_user
+from src.services import get_access
 
 router = APIRouter()
 @router.get(
@@ -17,7 +17,7 @@ router = APIRouter()
     tags=["users"],
 )
 def user_detail(
-    current_user: UserModel = Depends(get_current_user)
+    current_user: UserModel = Depends(get_access)
 ) -> UserModel:
     return current_user
 
@@ -29,7 +29,7 @@ def user_detail(
 )
 def user_update(
     new_data: UserUpdate,
-    current_user: UserModel = Depends(get_current_user),
+    current_user: UserModel = Depends(get_access),
     user_service: UserService = Depends(get_user_service),
     auth_service: AuthService = Depends(get_auth_service)
 ) -> dict:

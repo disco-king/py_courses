@@ -6,7 +6,7 @@ from fastapi import APIRouter, Depends, HTTPException, Response, status
 from src.api.v1.schemas import PostCreate, PostListResponse, PostModel
 from src.services import PostService, get_post_service
 from src.models import User
-from src.services import get_current_user
+from src.services import get_access
 
 router = APIRouter()
 
@@ -63,7 +63,7 @@ def post_create(
     post: PostCreate,
     response: Response,
     post_service: PostService = Depends(get_post_service),
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(get_access)
 ) -> PostModel:
     author_name = current_user.username
     post: dict = post_service.create_post(post=post, author=author_name)
@@ -78,7 +78,7 @@ def post_create(
 def post_delete(
     post_id: int,
     post_service: PostService = Depends(get_post_service),
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(get_access)
 ) -> Response:
     post: dict = find_post(post_id, post_service)
     if post["author"] != current_user.username:

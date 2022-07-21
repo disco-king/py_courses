@@ -20,7 +20,8 @@ __all__ = (
     "AuthService",
     "get_current_user",
     "get_auth_service",
-    "get_refresh_uuid"
+    "get_refresh_uuid",
+    "get_access"
 )
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/login")

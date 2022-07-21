@@ -37,18 +37,21 @@ def user_create(
 
 @router.post(
     path="/login",
-    response_model=Token,
     tags=["users"],
     summary="Зайти в свой профиль"
 )
 def log_in(
     service: AuthService = Depends(get_auth_service),
     form_data: OAuth2PasswordRequestForm = Depends()
-) -> Token:
-    return service.authenticate(
+) -> dict:
+    token: Token = service.authenticate(
         form_data.username,
         form_data.password
     )
+    return {
+        "access_token": token.access_token,
+        "refresh_token": token.refresh_token
+    }
 
 @router.post(
     path="/refresh",
