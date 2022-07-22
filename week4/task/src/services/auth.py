@@ -3,14 +3,13 @@ import uuid
 
 from passlib.hash import bcrypt
 from sqlmodel import Session
-from jose import jwt, JWTError
+from jose import jwt, JWTError, ExpiredSignatureError
 from fastapi import HTTPException, Depends, Security, status
-from fastapi.security import OAuth2PasswordBearer
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
-from pydantic import ValidationError
 
 from src.db import AbstractCache, get_cache, get_session
 from src.services import ServiceMixin
+from src.services.store import StoreService, get_store_service
 from src.models.user import User
 from src.api.v1.schemas import UserModel, UserCreate, Token
 from src.core.config import JWT_ALGORITHM, JWT_SECRET_KEY
@@ -18,28 +17,52 @@ from src.core.config import JWT_EXPIRATION_TIME, JWT_REFRESH_TIME
 
 __all__ = (
     "AuthService",
-    "get_current_user",
     "get_auth_service",
     "get_refresh_uuid",
-    "get_access"
+    "get_access",
+    "get_access_and_invalidate",
 )
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/login")
+common_status = status.HTTP_401_UNAUTHORIZED
+
 bearer = HTTPBearer()
 
-def get_current_user(token: str = Depends(oauth2_scheme)) -> UserModel:
-    return AuthService.validate_token(token)
+
+def decode_and_check(
+    credentials: str,
+    store_service: StoreService
+) -> dict:
+    token_content = AuthService.validate_token(credentials)
+    if store_service.token_in_blacklist(token_content["jti"]):
+        raise HTTPException(status_code=common_status, detail="Token in blacklist")
+    return token_content
+
 
 def get_access(
-    creds: HTTPAuthorizationCredentials = Security(bearer)
+    creds: HTTPAuthorizationCredentials = Security(bearer),
+    store_service: StoreService = Depends(get_store_service)
 ) -> UserModel:
-    return AuthService.validate_token(creds.credentials)
+    token_content = decode_and_check(creds.credentials, store_service)
+    return UserModel.parse_obj(token_content)
+
+
+def get_access_and_invalidate(
+    creds: HTTPAuthorizationCredentials = Security(bearer),
+    store_service: StoreService = Depends(get_store_service)
+) -> UserModel:
+    token_content = decode_and_check(creds.credentials, store_service)
+    store_service.store_access_token(token_content["jti"])
+    return UserModel.parse_obj(token_content)
 
 
 def get_refresh_uuid(
-    creds: HTTPAuthorizationCredentials = Security(bearer)
+    creds: HTTPAuthorizationCredentials = Security(bearer),
+    store_service: StoreService = Depends(get_store_service)
 ) -> str:
-    return AuthService.validate_refresh(creds.credentials)
+    token_content = AuthService.validate_refresh(creds.credentials)
+    if not store_service.token_in_whitelist(token_content["uuid"], token_content["jti"]):
+        raise HTTPException(status_code=common_status, detail="Token in blacklist")
+    return token_content["uuid"]
 
 
 class AuthService(ServiceMixin):
@@ -54,8 +77,6 @@ class AuthService(ServiceMixin):
 
     @classmethod
     def decode_token(cls, token: str, tok_type: str) -> dict:
-        code = status.HTTP_401_UNAUTHORIZED
-
         try:
             payload = jwt.decode(
                 token,
@@ -63,28 +84,27 @@ class AuthService(ServiceMixin):
                 algorithms=[JWT_ALGORITHM]
             )
 
-        except jwt.ExpiredSignatureError:
-            raise HTTPException(status_code=code, detail="Token has expired")
+        except ExpiredSignatureError:
+            raise HTTPException(status_code=common_status, detail="Token has expired")
 
         except JWTError:
-            raise HTTPException(status_code=code, detail="Token is invalid")
+            raise HTTPException(status_code=common_status, detail="Token is invalid")
 
         if payload["type"] != tok_type:
-            raise HTTPException(status_code= code, detail="Token type error")
+            raise HTTPException(status_code=common_status, detail="Token type error")
         return payload
 
 
     @classmethod
-    def validate_token(cls, token: str) -> UserModel:
+    def validate_token(cls, token: str) -> dict:
         payload = cls.decode_token(token, "access")
-        user = UserModel.parse_obj(payload)
-        return user
+        return payload
 
 
     @classmethod
-    def validate_refresh(cls, token: str) -> Token:
+    def validate_refresh(cls, token: str) -> dict:
         payload = cls.decode_token(token, "refresh")
-        return payload["uuid"]
+        return payload
 
 
     @classmethod
@@ -106,7 +126,11 @@ class AuthService(ServiceMixin):
         return payload
 
     @classmethod
-    def create_token(cls, user: User) -> Token:
+    def create_token(
+        cls,
+        user: User,
+        store_service: StoreService
+    ) -> Token:
 
         access_payload = cls.create_payload("access", user.uuid)
         refresh_payload = cls.create_payload("refresh", user.uuid)
@@ -120,6 +144,7 @@ class AuthService(ServiceMixin):
                 access_payload[key] = value
 
         access_payload["refresh_uuid"] = refresh_payload["jti"]
+        store_service.store_refresh_token(refresh_payload["uuid"], refresh_payload["jti"])
 
         access_token = jwt.encode(
             access_payload,
@@ -136,9 +161,14 @@ class AuthService(ServiceMixin):
         return Token(access_token=access_token, refresh_token=refresh_token)
 
 
-    def authenticate(self, username: str, password: str) -> Token:
+    def authenticate(
+        self,
+        username: str,
+        password: str,
+        store_service: StoreService
+    ) -> Token:
         exception = HTTPException(
-                        status_code=status.HTTP_401_UNAUTHORIZED,
+                        status_code=common_status,
                         detail="Incorrect username or password"
                     )
         
@@ -150,7 +180,7 @@ class AuthService(ServiceMixin):
         if not self.verify_pswd(password, user.password_hash):
             raise exception
 
-        return self.create_token(user)
+        return self.create_token(user, store_service)
 
 def get_auth_service(
     cache: AbstractCache = Depends(get_cache),

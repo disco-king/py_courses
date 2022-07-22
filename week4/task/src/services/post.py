@@ -29,12 +29,13 @@ class PostService(ServiceMixin):
             self.cache.set(key=f"{post.id}", value=post.json())
         return post.dict() if post else None
 
-    def create_post(self, post: PostCreate, author: str) -> dict:
+    def create_post(self, post: PostCreate, author: str, author_uuid: str) -> dict:
         """Создать пост."""
         new_post = Post(
             title=post.title,
             description=post.description,
-            author=author)
+            author=author,
+            uuid=author_uuid)
         self.session.add(new_post)
         self.session.commit()
         self.session.refresh(new_post)

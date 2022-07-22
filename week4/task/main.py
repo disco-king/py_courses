@@ -33,6 +33,16 @@ def startup():
             host=config.REDIS_HOST, port=config.REDIS_PORT, max_connections=10
         )
     )
+    cache.access_store = redis_cache.StoreRedis(
+        cache_instance=redis.Redis(
+            host=config.REDIS_HOST, port=config.REDIS_PORT, db=1, decode_responses=True
+        )
+    )
+    cache.refresh_store = redis_cache.SetStoreRedis(
+        store_instance=redis.Redis(
+            host=config.REDIS_HOST, port=config.REDIS_PORT, db=2, decode_responses=True
+        )
+    )
 
 
 @app.on_event("shutdown")

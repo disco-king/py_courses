@@ -13,4 +13,5 @@ class Post(SQLModel, table=True):
     views: int = Field(default=0)
     created_at: datetime = Field(default=datetime.utcnow(), nullable=False)
     author: str = Field(nullable=False)
+    author_uuid: str = Field(nullable=False)
 

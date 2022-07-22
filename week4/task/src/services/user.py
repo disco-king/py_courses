@@ -49,8 +49,6 @@ class UserService(ServiceMixin):
         return user.dict() if user else None
 
 
-
-# get_user_service — это провайдер UserService. Синглтон
 def get_user_service(
     cache: AbstractCache = Depends(get_cache),
     session: Session = Depends(get_session),

@@ -63,10 +63,15 @@ def post_create(
     post: PostCreate,
     response: Response,
     post_service: PostService = Depends(get_post_service),
-    current_user: User = Depends(get_access)
+    current_user: UserModel = Depends(get_access)
 ) -> PostModel:
     author_name = current_user.username
-    post: dict = post_service.create_post(post=post, author=author_name)
+    author_uuid = current_user.uuid
+    post: dict = post_service.create_post(
+        post=post,
+        author=author_name,
+        author_uuid=author_uuid
+    )
     return PostModel(**post)
 
 
@@ -81,7 +86,7 @@ def post_delete(
     current_user: User = Depends(get_access)
 ) -> Response:
     post: dict = find_post(post_id, post_service)
-    if post["author"] != current_user.username:
+    if post["author_uuid"] != current_user.uuid:
         raise HTTPException(
                     status_code=status.HTTP_401_UNAUTHORIZED,
                     detail="Invalid credentials"

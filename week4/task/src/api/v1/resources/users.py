@@ -7,7 +7,8 @@ from src.models import User
 from src.api.v1.schemas import UserCreate, UserUpdate, UserModel, Token
 from src.services import AuthService, get_auth_service 
 from src.services import UserService, get_user_service
-from src.services import get_access
+from src.services import StoreService, get_store_service
+from src.services import get_access, get_access_and_invalidate
 
 router = APIRouter()
 @router.get(
@@ -29,18 +30,16 @@ def user_detail(
 )
 def user_update(
     new_data: UserUpdate,
-    current_user: UserModel = Depends(get_access),
+    current_user: UserModel = Depends(get_access_and_invalidate),
     user_service: UserService = Depends(get_user_service),
-    auth_service: AuthService = Depends(get_auth_service)
+    auth_service: AuthService = Depends(get_auth_service),
+    store_service: StoreService = Depends(get_store_service)
 ) -> dict:
-    for key, value in new_data.dict().items():
-        print("NEW DATA", key, value)
-
     current_data = user_service.get_user_detail(current_user.uuid)
     current_data.update(new_data.dict(exclude_unset=True))
 
     ret_user = user_service.update_user(current_data)
-    token: Token = auth_service.create_token(ret_user)
+    token: Token = auth_service.create_token(ret_user, store_service)
     return {
         "msg": "Update is successful. Please use new access token.",
         "user": UserModel(**ret_user.dict()),

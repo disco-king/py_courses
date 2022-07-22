@@ -5,8 +5,8 @@ from fastapi import APIRouter, Depends, HTTPException, Response, status
 from sqlalchemy.exc import IntegrityError
 
 from src.api.v1.schemas import UserCreate, UserModel, UserLogin, Token
-from src.services import AuthService, get_auth_service
-from src.services import get_refresh_uuid
+from src.services import AuthService, get_auth_service, get_refresh_uuid
+from src.services import StoreService, get_store_service
 from src.services import UserService, get_user_service
 from src.models import User
 
@@ -42,15 +42,18 @@ def user_create(
 def log_in(
     user_data: UserLogin,
     service: AuthService = Depends(get_auth_service),
+    store_service: StoreService = Depends(get_store_service)
 ) -> dict:
     token: Token = service.authenticate(
         user_data.username,
-        user_data.password
+        user_data.password,
+        store_service
     )
     return {
         "access_token": token.access_token,
         "refresh_token": token.refresh_token
     }
+
 
 @router.post(
     path="/refresh",
@@ -60,10 +63,11 @@ def log_in(
 def refresh(
     auth_service: AuthService = Depends(get_auth_service),
     user_service: UserService = Depends(get_user_service),
-    user_uuid: str = Depends(get_refresh_uuid)
+    user_uuid: str = Depends(get_refresh_uuid),
+    store_service: StoreService = Depends(get_store_service)
 ) -> dict:
     user_data: dict = user_service.get_user_detail(user_uuid)
-    token: Token = auth_service.create_token(User(**user_data))
+    token: Token = auth_service.create_token(User(**user_data), store_service)
     return {
         "access_token": token.access_token,
         "refresh_token": token.refresh_token
