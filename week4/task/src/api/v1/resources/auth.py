@@ -6,6 +6,7 @@ from sqlalchemy.exc import IntegrityError
 
 from src.api.v1.schemas import UserCreate, UserModel, UserLogin, Token
 from src.services import AuthService, get_auth_service, get_refresh_uuid
+from src.services import get_access_and_invalidate
 from src.services import StoreService, get_store_service
 from src.services import UserService, get_user_service
 from src.models import User
@@ -39,7 +40,7 @@ def user_create(
     tags=["users"],
     summary="Зайти в свой профиль"
 )
-def log_in(
+def login(
     user_data: UserLogin,
     service: AuthService = Depends(get_auth_service),
     store_service: StoreService = Depends(get_store_service)
@@ -72,3 +73,26 @@ def refresh(
         "access_token": token.access_token,
         "refresh_token": token.refresh_token
     }
+
+@router.post(
+    path="/logout",
+    tags=["users"],
+    summary="Выйти из аккаунта"
+)
+def logout(
+    user: UserModel = Depends(get_access_and_invalidate)
+) -> dict:
+    return {"msg": "You have logged out."}
+
+
+@router.post(
+    path="/logout_all",
+    tags=["users"],
+    summary="Выйти со всех устройств"
+)
+def logout_all(
+    user: UserModel = Depends(get_access_and_invalidate),
+    store_service: StoreService = Depends(get_store_service)
+) -> dict:
+    store_service.clear_refresh_tokens(user.uuid)
+    return {"msg": "You have logged out from all devices."}
