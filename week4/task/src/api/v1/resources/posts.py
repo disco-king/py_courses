@@ -3,9 +3,9 @@ from typing import Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Response, status
 
-from src.api.v1.schemas import PostCreate, PostListResponse, PostModel
+from src.api.v1.schemas import PostCreate, PostListResponse
+from src.api.v1.schemas import PostModel, UserModel
 from src.services import PostService, get_post_service
-from src.models import User
 from src.services import get_access
 
 router = APIRouter()
@@ -83,7 +83,7 @@ def post_create(
 def post_delete(
     post_id: int,
     post_service: PostService = Depends(get_post_service),
-    current_user: User = Depends(get_access)
+    current_user: UserModel = Depends(get_access)
 ) -> Response:
     post: dict = find_post(post_id, post_service)
     if post["author_uuid"] != current_user.uuid:

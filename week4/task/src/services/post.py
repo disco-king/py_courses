@@ -35,7 +35,7 @@ class PostService(ServiceMixin):
             title=post.title,
             description=post.description,
             author=author,
-            uuid=author_uuid)
+            author_uuid=author_uuid)
         self.session.add(new_post)
         self.session.commit()
         self.session.refresh(new_post)
