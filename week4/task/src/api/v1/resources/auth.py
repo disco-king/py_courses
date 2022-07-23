@@ -82,7 +82,7 @@ def refresh(
 def logout(
     user: UserModel = Depends(get_access_and_invalidate)
 ) -> dict:
-    return {"msg": "You have logged out."}
+    return {"msg": "You have successfully logged out."}
 
 
 @router.post(
@@ -95,4 +95,4 @@ def logout_all(
     store_service: StoreService = Depends(get_store_service)
 ) -> dict:
     store_service.clear_refresh_tokens(user.uuid)
-    return {"msg": "You have logged out from all devices."}
+    return {"msg": "You have successfully logged out from all devices."}

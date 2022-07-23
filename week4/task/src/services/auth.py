@@ -34,7 +34,7 @@ def decode_and_check(
 ) -> dict:
     token_content = AuthService.validate_token(credentials)
     if store_service.token_in_blacklist(token_content["jti"]):
-        raise HTTPException(status_code=common_status, detail="Token in blacklist")
+        raise HTTPException(status_code=common_status, detail="Token is blacklisted")
     return token_content
 
 
@@ -52,6 +52,10 @@ def get_access_and_invalidate(
 ) -> UserModel:
     token_content = decode_and_check(creds.credentials, store_service)
     store_service.store_access_token(token_content["jti"])
+    store_service.delete_refresh_token(
+        token_content["uuid"],
+        token_content["refresh_uuid"],
+    )
     return UserModel.parse_obj(token_content)
 
 
@@ -61,7 +65,7 @@ def get_refresh_uuid(
 ) -> str:
     token_content = AuthService.validate_refresh(creds.credentials)
     if not store_service.token_in_whitelist(token_content["uuid"], token_content["jti"]):
-        raise HTTPException(status_code=common_status, detail="Token in blacklist")
+        raise HTTPException(status_code=common_status, detail="Token is blacklisted")
     return token_content["uuid"]
 
 
