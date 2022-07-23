@@ -23,18 +23,19 @@ class RepeatDecorator:
             Функция-обертка, выставляющая паузы для основной фунции.
             Вызов основной функции производится через
             экспоненциально увеличивающиеся промежутки времени.
-            При этом пауза перед первым вызовом
-            и после последнего вызова отсутствует.
+            При этом пауза перед первым вызовом отсутствует.
             """
-            start = time.perf_counter()
-            func()
-            for i in range(self.count - 1):
-                print("Пауза:", self.pause)
+            print("Количество запусков: ", self.count)
+            print("Начало работы")
+
+            for i in range(1, self.count + 1):
+                res = func(*args, **kwargs)
                 time.sleep(self.pause)
-                curr = time.perf_counter()
-                print("Время (сек) с начала работы:", curr - start)
+                print(f"Запуск номер {i}. Ожидание: {self.pause} сек."
+                        f" Результат декорируемой функции: {res}")
                 self._update_sleep_time()
-                func()
+
+            print("Конец работы")
 
         return wrapper
 
@@ -45,38 +46,16 @@ class RepeatDecorator:
         ему присвается значение лимита.
         """
         if self.pause < self.border_time:
-            self.pause *= 2 ** self.factor
+            self.pause *= self.factor
         if self.pause > self.border_time:
             self.pause = self.border_time
 
 
-@RepeatDecorator(5, 1, 1, 10)
-def func():
-    print("<<< func called >>>")
+@RepeatDecorator(5, 1, 2, 10)
+def func(num: int) -> int:
+    return num + num
 
 if __name__ == "__main__":
-    print("5 вызовов, неограниченный рост до 8 сек.:")
-    func()
-    print()
+    func(2)
 
-    print("3 вызова, неограниченный рост до 6 сек.:")
-    @RepeatDecorator(3, 3, 1, 20)
-    def func():
-        print("<<< func called >>>")
-    func()
-    print()
-
-    print("4 вызова, рост ограничен"
-            " значением в 3 сек. на втором вызове:")
-    @RepeatDecorator(4, 2, 5, 3)
-    def func():
-        print("<<< func called >>>")
-    func()
-    print()
-
-    print("4 вызова, рост отсутствует:")
-    @RepeatDecorator(4, 1, 0, 100)
-    def func():
-        print("<<< func called >>>")
-    func()
 

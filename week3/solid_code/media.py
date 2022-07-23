@@ -1,41 +1,52 @@
-# В дополнение к общему классу Media
-# (который, кстати, поддерживает и координаты планет)
-# создадим двух потомков с идентичными сигнатурами
-# их classmethod'ов, чтобы любой герой мог выбрать
-# СМИ себе по душе.
+from abc import ABC, abstractmethod
+from heroes import SuperHero
+from places import Place
 
-class Media:
+# Абстрактный класс Media имплементируют
+# потомки, определяя абстрактный метод denote_medium.
 
-    @classmethod
-    def make_news(cls, hero, place):
+class Media(ABC):
+
+    def make_news(self, news):
         """
-        Метод получает в качестве аргументов героя и место,
-        объявляет о спасении места героем. Ничего не возвращает
+        Метод получает в качестве аргумента текст новости,
+        объявляет о ней, предварительно обозначив себя.
+        Ничего не возвращает.
         """
-        place_name = getattr(place, 'name', 
-                            getattr(place, 'coordinates', 'place'))
-        print(f'{hero.name} saved the {place_name}!')
+        self.denote_medium()
+        print(news)
+
+    @abstractmethod
+    def denote_medium(self):
+        """
+        Метод объявляет, какое именно СМИ сообщает новость.
+        Ничего не принимает и не возвращает.
+        """
+        pass
+
+# Выносим функционал работы с информацией в отдельный класс,
+# cоблюдая принцип единой ответственности и инверсии зависимостей.
+class NewsMaker:
+
+    @staticmethod
+    def get_info(hero: SuperHero, place: Place):
+        """
+        Метод принимает объекты типов SuperHero и Place,
+        извлекает из них необходимые данные,
+        и возвращает формат-строку с новостью.
+        """
+        place_name = place.get_location()
+        hero_name = hero.get_name()
+        return f'{hero_name} saved the {place_name}!'
 
 
 class TV(Media):
 
-    @classmethod
-    def make_news(cls, hero, place):
-        """
-        Метод изменяет функционал
-        make_news базового класса.
-        """
-        print('TV report: ', end='')
-        super(TV, cls).make_news(hero, place)
+    def denote_medium(self):
+        print('TV report:', end=' ')
 
 
 class NewsPaper(Media):
 
-    @classmethod
-    def make_news(cls, hero, place):
-        """
-        Метод изменяет функционал
-        make_news базового класса.
-        """
-        print('Newspaper article: ', end='')
-        super(NewsPaper, cls).make_news(hero, place)
+    def denote_medium(self):
+        print('Newspaper article:', end=' ')
