@@ -27,7 +27,7 @@ def user_create(
         user: dict = user_service.create_user(user=user)
     except IntegrityError:
         raise HTTPException(
-            status_code=HTTPStatus.BAD_REQUEST,
+            status_code=HTTPStatus.FORBIDDEN,
             detail="User with this name or email already exists"
         )
 

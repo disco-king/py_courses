@@ -45,7 +45,7 @@ def user_update(
         ret_user = user_service.update_user(current_data)
     except IntegrityError:
         raise HTTPException(
-            status_code=HTTPStatus.BAD_REQUEST,
+            status_code=HTTPStatus.FORBIDDEN,
             detail="User with this name or email already exists"
         )
     token: Token = auth_service.create_token(ret_user, store_service)

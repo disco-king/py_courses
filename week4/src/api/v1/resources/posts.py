@@ -87,8 +87,8 @@ def post_delete(
     post: dict = find_post(post_id, post_service)
     if post["author_uuid"] != current_user.uuid:
         raise HTTPException(
-            status_code=HTTPStatus.UNAUTHORIZED,
-            detail="Invalid credentials"
+            status_code=HTTPStatus.FORBIDDEN,
+            detail="Can not delete this post"
         )
     post_service.delete_post(item_id=post_id)
     return Response(status_code=HTTPStatus.NO_CONTENT)
