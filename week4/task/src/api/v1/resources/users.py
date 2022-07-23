@@ -1,17 +1,18 @@
 from http import HTTPStatus
 from typing import Optional
 
-from fastapi import APIRouter, Depends, HTTPException, Response, status
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.exc import IntegrityError
 
-from src.models import User
-from src.api.v1.schemas import UserCreate, UserUpdate, UserModel, Token
+from src.api.v1.schemas import UserUpdate, UserModel, Token
 from src.services import AuthService, get_auth_service 
 from src.services import UserService, get_user_service
 from src.services import StoreService, get_store_service
 from src.services import get_access, get_access_and_invalidate
 
 router = APIRouter()
+
+
 @router.get(
     path="/me",
     response_model=UserModel,

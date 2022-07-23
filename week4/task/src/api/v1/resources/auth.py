@@ -1,7 +1,7 @@
 from http import HTTPStatus
 from typing import Optional
 
-from fastapi import APIRouter, Depends, HTTPException, Response, status
+from fastapi import APIRouter, Depends, HTTPException, Response
 from sqlalchemy.exc import IntegrityError
 
 from src.api.v1.schemas import UserCreate, UserModel, UserLogin, Token
@@ -9,7 +9,6 @@ from src.services import AuthService, get_auth_service, get_refresh_uuid
 from src.services import get_access_and_invalidate
 from src.services import StoreService, get_store_service
 from src.services import UserService, get_user_service
-from src.models import User
 
 router = APIRouter()
 
@@ -68,7 +67,7 @@ def refresh(
     store_service: StoreService = Depends(get_store_service)
 ) -> dict:
     user_data: dict = user_service.get_user_detail(user_uuid)
-    token: Token = auth_service.create_token(User(**user_data), store_service)
+    token: Token = auth_service.create_token(UserModel(**user_data), store_service)
     return {
         "access_token": token.access_token,
         "refresh_token": token.refresh_token

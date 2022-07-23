@@ -132,7 +132,7 @@ class AuthService(ServiceMixin):
     @classmethod
     def create_token(
         cls,
-        user: User,
+        user: UserModel,
         store_service: StoreService
     ) -> Token:
 
@@ -185,6 +185,7 @@ class AuthService(ServiceMixin):
             raise exception
 
         return self.create_token(user, store_service)
+
 
 def get_auth_service(
     cache: AbstractCache = Depends(get_cache),

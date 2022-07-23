@@ -1,10 +1,9 @@
 from http import HTTPStatus
 from typing import Optional
 
-from fastapi import APIRouter, Depends, HTTPException, Response, status
+from fastapi import APIRouter, Depends, HTTPException, Response
 
-from src.api.v1.schemas import PostCreate, PostListResponse
-from src.api.v1.schemas import PostModel, UserModel
+from src.api.v1.schemas import PostCreate, PostListResponse, PostModel, UserModel
 from src.services import PostService, get_post_service
 from src.services import get_access
 
@@ -88,9 +87,9 @@ def post_delete(
     post: dict = find_post(post_id, post_service)
     if post["author_uuid"] != current_user.uuid:
         raise HTTPException(
-                    status_code=status.HTTP_401_UNAUTHORIZED,
-                    detail="Invalid credentials"
-                )
+            status_code=HTTPStatus.UNAUTHORIZED,
+            detail="Invalid credentials"
+        )
     post_service.delete_post(item_id=post_id)
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 

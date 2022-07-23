@@ -38,7 +38,6 @@ class UserService(ServiceMixin):
 
         self.session.delete(old_user)
         self.session.add(updated_user)
-
         self.session.commit()
         self.session.refresh(updated_user)
         return updated_user
