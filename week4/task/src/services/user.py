@@ -1,5 +1,3 @@
-import json
-from functools import lru_cache
 from typing import Optional
 import uuid
 
@@ -7,7 +5,7 @@ from fastapi import Depends
 from sqlmodel import Session
 from passlib.hash import bcrypt
 
-from src.api.v1.schemas import UserCreate, UserModel
+from src.api.v1.schemas import UserCreate
 from src.db import AbstractCache, get_cache, get_session
 from src.models import User
 from src.services import ServiceMixin

@@ -91,5 +91,5 @@ def post_delete(
             detail="Invalid credentials"
         )
     post_service.delete_post(item_id=post_id)
-    return Response(status_code=status.HTTP_204_NO_CONTENT)
+    return Response(status_code=HTTPStatus.NO_CONTENT)
 

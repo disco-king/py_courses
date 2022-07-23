@@ -59,6 +59,10 @@ class AbstractSetCache(ABC):
         pass
 
     @abstractmethod
+    def delete(self, set_name: str,):
+        pass
+
+    @abstractmethod
     def close(self):
         pass
 

@@ -67,6 +67,8 @@ def refresh(
     store_service: StoreService = Depends(get_store_service)
 ) -> dict:
     user_data: dict = user_service.get_user_detail(user_uuid)
+    if not user_data:
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="User not found")
     token: Token = auth_service.create_token(UserModel(**user_data), store_service)
     return {
         "access_token": token.access_token,

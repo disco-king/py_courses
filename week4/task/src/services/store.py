@@ -1,14 +1,9 @@
-import json
-from functools import lru_cache
 from typing import Optional
 
 from fastapi import Depends
-from sqlmodel import Session
 
-from src.api.v1.schemas import PostCreate, PostModel
 from src.db import AbstractCache, AbstractSetCache
 from src.db import get_access_store, get_refresh_store
-from src.models import Post
 from src.services import TokenStoreMixin
 
 __all__ = (
@@ -37,6 +32,7 @@ class StoreService(TokenStoreMixin):
 
     def clear_refresh_tokens(self, user_uuid: str):
         self.refresh_store.delete(user_uuid)
+
 
 def get_store_service(
     access_store: AbstractCache = Depends(get_access_store),

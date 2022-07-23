@@ -11,7 +11,7 @@ from src.db import AbstractCache, get_cache, get_session
 from src.services import ServiceMixin
 from src.services.store import StoreService, get_store_service
 from src.models.user import User
-from src.api.v1.schemas import UserModel, UserCreate, Token
+from src.api.v1.schemas import UserModel, Token
 from src.core.config import JWT_ALGORITHM, JWT_SECRET_KEY
 from src.core.config import JWT_EXPIRATION_TIME, JWT_REFRESH_TIME
 
