@@ -2,6 +2,7 @@ from http import HTTPStatus
 from typing import Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Response, status
+from sqlalchemy.exc import IntegrityError
 
 from src.models import User
 from src.api.v1.schemas import UserCreate, UserUpdate, UserModel, Token
@@ -37,8 +38,13 @@ def user_update(
 ) -> dict:
     current_data = user_service.get_user_detail(current_user.uuid)
     current_data.update(new_data.dict(exclude_unset=True))
-
-    ret_user = user_service.update_user(current_data)
+    try:
+        ret_user = user_service.update_user(current_data)
+    except IntegrityError:
+        raise HTTPException(
+            status_code=HTTPStatus.BAD_REQUEST,
+            detail="User with this name or email already exists"
+        )
     token: Token = auth_service.create_token(ret_user, store_service)
     return {
         "msg": "Update is successful. Please use new access token.",
