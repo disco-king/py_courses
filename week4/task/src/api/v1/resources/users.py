@@ -38,7 +38,7 @@ def user_update(
     store_service: StoreService = Depends(get_store_service)
 ) -> dict:
     current_data = user_service.get_user_detail(current_user.uuid)
-    if not user_data:
+    if not current_data:
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="User not found")
     current_data.update(new_data.dict(exclude_unset=True))
     try:
