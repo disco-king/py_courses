@@ -85,6 +85,8 @@ def post_delete(
     current_user: UserModel = Depends(get_access)
 ) -> Response:
     post: dict = find_post(post_id, post_service)
+    if not post:
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="Post not found")
     if post["author_uuid"] != current_user.uuid:
         raise HTTPException(
             status_code=HTTPStatus.FORBIDDEN,
